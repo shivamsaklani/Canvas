@@ -13,7 +13,7 @@ const LoginUserSchema = z.object({
 
 
 const CreateRoomSchema =z.object({
-    roomId:z.string()
+    roomname:z.string().min(3).max(20),
 });
 
 export {
