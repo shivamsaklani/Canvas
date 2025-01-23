@@ -23,9 +23,6 @@ app.post("/signup",async (req,res)=>{
         return;
     }
     else{
-        
-
-
         // Insert New User in the database 
         try {
             const createUser= await Database.user.create({
@@ -48,10 +45,6 @@ app.post("/signup",async (req,res)=>{
         }
 
     }
-
-   
-
-
 });
 
                         // SIGNIN 
@@ -115,6 +108,7 @@ app.post("/createroom",VerfiyToken,async (req,res)=>{
     }
     else{
         try {
+            console.log(req.userId);
             const roomId = await Database.room.create({
                 data:{
                     adminId :req.userId as string,
@@ -134,8 +128,9 @@ app.post("/createroom",VerfiyToken,async (req,res)=>{
         }
     }
 });
-                // new Room slug id will give new room Id then only we can put shapes inside it //
-app.post("/room/:slugId",VerfiyToken,async (req,res)=>{
+
+            // new user subscribes to the room then he will receive the room id of the room using the slug//
+app.get("/room/:slugId",async (req,res)=>{
   const slugId= req.params.slugId;
 
   const data =await Database.room.findFirst({
@@ -151,7 +146,7 @@ app.post("/room/:slugId",VerfiyToken,async (req,res)=>{
 });
 
 
-app.post("/canvas/:roomid",VerfiyToken,async (req,res)=>{
+app.get("/canvas/:roomid",VerfiyToken,async (req,res)=>{
     const roomId=Number(req.params.roomid);
 
     const data = await Database.shapes.findMany(
@@ -174,4 +169,4 @@ app.post("/canvas/:roomid",VerfiyToken,async (req,res)=>{
 
 
 
-app.listen(3000);
+app.listen(3001);
