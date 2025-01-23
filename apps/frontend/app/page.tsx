@@ -1,8 +1,11 @@
-import { Brush, Palette, Share2} from 'lucide-react';
+"use client"
+import { Brush, Link, Palette, Share2} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-
+import { useRouter } from 'next/navigation';
 export default function Home() {
+  const router = useRouter();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Hero Section */}
@@ -15,11 +18,15 @@ export default function Home() {
             Express your creativity with our intuitive drawing tool. Create beautiful artwork, diagrams, and sketches with ease.
           </p>
           <div className="flex justify-center gap-4">
-            <Button size="lg" className="text-lg px-8">
-              Start Drawing
+           
+            <Button size="lg" onClick={()=>router.push('/signin')} className="text-lg px-8">
+           Start Drawing
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8">
-              View Gallery
+            
+           
+            <Button size="lg" onClick={()=>router.push("/signin")} variant="outline" className="text-lg px-8">
+           
+              View Canvas
             </Button>
           </div>
         </div>

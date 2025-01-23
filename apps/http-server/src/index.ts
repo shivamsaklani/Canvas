@@ -10,7 +10,7 @@ const app =express();
 app.use(express.json());
 app.use(cors());
 
-
+                    // first hash the password and then save it in the database //
 
                         // SIGNUP 
 
