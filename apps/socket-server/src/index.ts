@@ -8,10 +8,22 @@ interface User{
   rooms:string[],
   userId:string
 }
+type shapes ={
+  type :"rect",
+  x:number,
+  y:number,
+  width:number,
+  height:number
+} | {
+  type :"circle",
+  center :number
+}
 
 
 
 const Users:User[]=[];
+
+const existingShapes:shapes[]=[];
 
 
 function verifyUser(token:string):string |null{
@@ -44,7 +56,6 @@ wss.on("connection",(ws:WebSocket,request)=>{
     const queryParams = new URLSearchParams(url.split('?')[1]);
     const token =queryParams.get('token') ||"";
     const user =verifyUser(token) as string;
-
     if (Users.find(user=>{user.userId})) {
       return;
      
@@ -57,14 +68,6 @@ wss.on("connection",(ws:WebSocket,request)=>{
   
       });
     }
-
-   Users.forEach(user => {
-
-    console.log(user.userId);
-   
-    
-   });
-   console.log("\n");
     
     
     ws.on("message",async (mesg:string)=>{
@@ -97,9 +100,6 @@ wss.on("connection",(ws:WebSocket,request)=>{
           const roomId=parsedData.roomId;
           const shape=parsedData.shape as string;
 
-          console.log(roomId);
-          console.log(shape);
-
          try {
            await Database.shapes.create({
              data:{
@@ -129,7 +129,7 @@ wss.on("connection",(ws:WebSocket,request)=>{
               }))
             }
           });
-        }
+         }//create shape ends 
     });
 
    

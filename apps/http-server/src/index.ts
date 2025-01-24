@@ -146,10 +146,10 @@ app.get("/room/:slugId",async (req,res)=>{
 });
 
 
-app.get("/canvas/:roomid",VerfiyToken,async (req,res)=>{
+app.get("/canvas/:roomid",async (req,res)=>{
     const roomId=Number(req.params.roomid);
 
-    const data = await Database.shapes.findMany(
+    const shape = await Database.shapes.findMany(
         {
             where:{
                 roomId:roomId
@@ -163,7 +163,7 @@ app.get("/canvas/:roomid",VerfiyToken,async (req,res)=>{
     )
 
     res.json({
-        data
+        shape
     })
 })
 

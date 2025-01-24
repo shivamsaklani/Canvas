@@ -32,7 +32,7 @@ export default function VerfiyToken(req:Request,res:Response,next:NextFunction):
         
     } catch (error) {
 
-        res.json({mesg:"error"});
+        res.json({mesg:"error : no token found"});
         return;
 
         

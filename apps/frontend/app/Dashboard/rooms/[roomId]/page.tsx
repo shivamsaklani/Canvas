@@ -1,5 +1,5 @@
-import InitDraw from "@/DrawLogic/Draw";
-import { Canvas } from "../../components/Canvas";
+
+import { UserAuth } from "../../components/UserAuth";
 
 export default async function RoomPage({params} :{
     params:{
@@ -9,6 +9,6 @@ export default async function RoomPage({params} :{
     const roomId= (await params).roomId;
     console.log(roomId);
 
-    return <Canvas roomId={roomId}/>
+    return <UserAuth roomId={roomId}/>
 
 }

@@ -1,14 +1,14 @@
-"use client"
 import InitDraw from "@/DrawLogic/Draw";
 import { useEffect, useRef } from "react";
 
-export function Canvas({roomId }:{
-    roomId:string
+export function Canvas ({roomId, ws}:{
+    roomId:string,
+    ws:WebSocket
 }){
     const canvasref=useRef<HTMLCanvasElement>(null);
     useEffect(()=>{
         if(canvasref.current){
-           InitDraw(canvasref.current,roomId);
+           InitDraw(canvasref.current,roomId,ws);
            
         }
 
@@ -17,7 +17,7 @@ export function Canvas({roomId }:{
 
 
 
-    return <div className="h-screen w-screen">
+    return <div className=" bg-blue-300 flex  ">
         
         {/* <div className="h-screen fixed m-5 ">
             <div className="bg-white rounded-lg h-96 w-48 flex justify-center ">
@@ -26,7 +26,7 @@ export function Canvas({roomId }:{
            
         </div> */}
 
-    <canvas ref={canvasref} className=" flex bg-red-300 rounded" height={750} width={1080}></canvas>
+    <canvas ref={canvasref} className="bg-red-300" width={1080} height={1080}></canvas>
   
    </div>
 }

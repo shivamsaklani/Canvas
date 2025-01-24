@@ -69,6 +69,9 @@ importers:
       '@repo/canvas':
         specifier: workspace:*
         version: link:../../packages/Canvas
+      '@repo/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
