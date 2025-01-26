@@ -1,17 +1,17 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { use, useRef } from "react";
-import { data } from "react-router-dom";
+import { useRef } from "react";
+import { HTTP_BACKEND } from "@repo/backend-common/config";
 export default function SignUp(){
     const email = useRef<HTMLInputElement>(null);
     const password = useRef<HTMLInputElement>(null);
     const username= useRef<HTMLInputElement>(null);
     async function backend(){
        try {
-      const response=await axios.post( "http://localhost:3001/signup",{
+      const response=await axios.post( `${HTTP_BACKEND}/signup`,{
         
             "email":email.current?.value,
             "password":password.current?.value,

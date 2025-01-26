@@ -7,7 +7,6 @@ export default async function RoomPage({params} :{
     }
 }){
     const roomId= (await params).roomId;
-    console.log(roomId);
 
     return <UserAuth roomId={roomId}/>
 

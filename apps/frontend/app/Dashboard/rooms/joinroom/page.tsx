@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
@@ -14,7 +15,7 @@ export default function JoinRoom(){
     async function create(){
        const roomid = roomId.current?.value;
       try {
-          const room = await axios.get("http://localhost:3001/room/"+roomid);
+          const room = await axios.get(`${HTTP_BACKEND}/room/`+roomid);
           console.log(room.data.roomId);
           router.push("/Dashboard/rooms/"+room.data.roomId);
       } catch (error) {

@@ -1,7 +1,7 @@
 "use client"
-import InitDraw from "@/DrawLogic/Draw";
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "./Canvas";
+import { WS_BACKEND } from "@repo/backend-common/config";
 
 export function UserAuth({roomId} :{roomId:string}){
    
@@ -14,14 +14,13 @@ export function UserAuth({roomId} :{roomId:string}){
         if(!token){
             return;
         }
-        const ws= new WebSocket("ws://localhost:8081?token="+token);
+        const ws= new WebSocket(`${WS_BACKEND}?token=${token}`);
         ws.onopen=()=>{
             setsocket(ws);
             ws.send(JSON.stringify({
                 type:"joinroom",
                 roomId:roomId
             }));
-            console.log(ws);
 
         }
 

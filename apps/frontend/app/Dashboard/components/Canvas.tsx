@@ -1,4 +1,6 @@
-import InitDraw from "@/DrawLogic/Draw";
+"use client"
+import { Card } from "@/components/ui/card";
+import InitDraw, { resizeCanvas } from "@/DrawLogic/Draw";
 import { useEffect, useRef } from "react";
 
 export function Canvas ({roomId, ws}:{
@@ -7,26 +9,29 @@ export function Canvas ({roomId, ws}:{
 }){
     const canvasref=useRef<HTMLCanvasElement>(null);
     useEffect(()=>{
+       
         if(canvasref.current){
-           InitDraw(canvasref.current,roomId,ws);
+            const canvas= canvasref.current;
+            
+            window.addEventListener('resize',()=>{resizeCanvas(canvas)});
+
+           InitDraw(canvas,roomId,ws);
            
         }
-
-       
-    },[canvasref])
-
-
-
-    return <div className=" bg-blue-300 flex  ">
         
-        {/* <div className="h-screen fixed m-5 ">
-            <div className="bg-white rounded-lg h-96 w-48 flex justify-center ">
-            sidebar
-            </div>
-           
-        </div> */}
+       
+    },[])
 
-    <canvas ref={canvasref} className="bg-red-300" width={1080} height={1080}></canvas>
+
+
+    return <div className=" bg-blue-300 flex  h-screen w-screen justify-center ">
+        
+       
+           <Card className="fixed h-10 mt-5 rounded">topbar</Card>
+           
+       
+
+    <canvas ref={canvasref} className="bg-red-300" height={window.innerHeight} width={window.innerWidth}></canvas>
   
    </div>
 }

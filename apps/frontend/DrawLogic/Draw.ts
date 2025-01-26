@@ -1,4 +1,5 @@
 import axios from "axios";
+import{HTTP_BACKEND} from "@repo/backend-common/config";
 type shapes ={
     type :"rect",
     x:number,
@@ -9,7 +10,18 @@ type shapes ={
     type :"circle",
     center :number
 }
+
+export function resizeCanvas(canvas:HTMLCanvasElement){
+    canvas.height= window.innerHeight;
+    canvas.width =window.innerWidth;
+    const ctx = canvas.getContext("2d");
+    ctx?.scale(window.devicePixelRatio,window.devicePixelRatio);
+
+}
+
 export default async function InitDraw(canvas: HTMLCanvasElement,roomId:string,ws:WebSocket){
+
+
 
     const existingShapes:shapes[]=await StoredShapes(roomId);
     console.log(existingShapes);
@@ -22,11 +34,14 @@ export default async function InitDraw(canvas: HTMLCanvasElement,roomId:string,w
     }
 
     ws.onmessage=(event)=>{
+        
         const parsedata = JSON.parse(event.data);
+        console.log(parsedata);
         if(parsedata.type ==="createshape"){
-            const shape =JSON.parse(parsedata.shape);
-            console.log(shape);
-            existingShapes.push(shape);
+            const data =JSON.parse(parsedata.shape);
+            console.log(data);
+            existingShapes.push(data.shape);
+            console.log(data);
             clearDraw(existingShapes,canvas);
 
         }
@@ -110,11 +125,9 @@ export function clearDraw(existingShapes:shapes[], canvas:HTMLCanvasElement){
 }
 
 async function StoredShapes(roomId:string){
-    console.log(roomId);
 
-    const response = await axios.get("http://localhost:3001/canvas/" +Number(roomId));
+    const response = await axios.get(`${HTTP_BACKEND}/canvas/${Number(roomId)}`);
     const storedshape = response.data.shape;
-    console.log(storedshape);
 
     const shape = storedshape.map((x:{shape:string})=>{
         const parsedData = JSON.parse(x.shape);

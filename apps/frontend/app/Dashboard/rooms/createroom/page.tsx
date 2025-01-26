@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
@@ -14,7 +15,7 @@ export default function CreateRoom(){
     async function create(){
         console.log(roomName.current?.value);
       try {
-          const room = await axios.post("http://localhost:3001/createroom",{
+          const room = await axios.post(`${HTTP_BACKEND}/createroom`,{
               "roomname":roomName.current?.value as string,},
               {
               headers:{

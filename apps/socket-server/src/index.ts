@@ -100,6 +100,8 @@ wss.on("connection",(ws:WebSocket,request)=>{
           const roomId=parsedData.roomId;
           const shape=parsedData.shape as string;
 
+        
+
          try {
            await Database.shapes.create({
              data:{
