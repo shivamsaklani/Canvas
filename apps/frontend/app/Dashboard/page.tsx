@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Navbar } from "@/components/ui/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, User, UserCircle, Users } from "lucide-react";
+import { PlusCircle, UserCircle, Users } from "lucide-react";
 import Dashcard from "@/components/ui/dashcard";
 
 export default function Dashboard() {
@@ -21,7 +21,6 @@ export default function Dashboard() {
 
       try {
           const room = await axios.get(`${HTTP_BACKEND}/room/`+roomid);
-          console.log(room.data.roomId);
           router.push("/Dashboard/rooms/"+room.data.roomId);
       } catch (error) {
         console.log(error);
@@ -32,17 +31,17 @@ export default function Dashboard() {
 
     async function createroom(){
         console.log(roomName.current?.value);
+        let room ;
       try {
-          const room = await axios.post(`${HTTP_BACKEND}/createroom`,{
+         room = await axios.post(`${HTTP_BACKEND}/createroom`,{
               "roomname":roomName.current?.value as string,},
               {
               headers:{
                 "authorization":localStorage.getItem("token")
               }
           });
-          console.log(room);
+
           alert("RoomName"+room.data.roomId.slug);
-          router.push("/Dashboard/rooms/joinroom");
 
       } catch (error) {
         console.log(error);
@@ -113,6 +112,7 @@ export default function Dashboard() {
          <Dashcard title="Total rooms" content="3" icon={UserCircle}/>
         </div>
       </div>
-    </main></>
+    </main>
+    </>
   );
 }

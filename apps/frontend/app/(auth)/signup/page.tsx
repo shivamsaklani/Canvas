@@ -35,7 +35,7 @@ export default function SignUp(){
         <Input ref={email} type="text" placeholder="Email" ></Input>
            <Input ref={password} type="password" placeholder="Password"></Input>
            <Input ref={username} type="text" placeholder="Enter your name"></Input>
-        <Button onClick={backend} size="lg" className="text-md" >SignIn</Button>
+        <Button onClick={backend} size="lg" className="text-md" >SignUp</Button>
         <div className="flex font-light text-gray justify-end w-full">
         <Link href="./signin">login</Link>
         </div>

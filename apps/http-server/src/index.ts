@@ -1,12 +1,12 @@
 import express from "express"
 import jwt from "jsonwebtoken"
-import z from "zod"
 import cors from "cors"
 import{ CreateRoomSchema, CreateUserSchema, LoginUserSchema } from "@repo/common/types"
 import {Database } from  "@repo/db/database"
 import { JWT_SECRET } from "@repo/backend-common/config"
 import VerfiyToken from "./verifytoken"
 const app =express();
+const encrypt = require("bcryptjs");
 app.use(express.json());
 app.use(cors());
 
@@ -23,13 +23,15 @@ app.post("/signup",async (req,res)=>{
         return;
     }
     else{
+        const password = parsedData.data.password;
+        const hashedpassword = await encrypt.hash(password,10); 
         // Insert New User in the database 
         try {
             const createUser= await Database.user.create({
                
                 data:{
                     email:parsedData.data.email,
-                    password:parsedData.data.password,
+                    password:hashedpassword,
                     name:parsedData.data.name
                }
             });
@@ -61,19 +63,21 @@ app.post("/signin",async (req,res)=>{
 
     else{
         try {
+                
                 const userDetails =await Database.user.findFirst({
                     where:{
-                        email:parsedData.data.email,
-                        password:parsedData.data.password
+                        email:parsedData.data.email
                     }
                 })
-
-                if(!userDetails){
+                const password= parsedData.data.password;
+                const hashedpassword =(encrypt.compare(userDetails?.password,password));
+                if(!userDetails || !hashedpassword){
                     res.json({mesg:"no user found"});
                     return;
                 }
+               
 
-                const token =jwt.sign({userId:userDetails.id},JWT_SECRET);
+                const token =jwt.sign({userId:userDetails.id, hashedpassword},JWT_SECRET);
 
                 res.json({
                     token
@@ -164,6 +168,29 @@ app.get("/canvas/:roomid",async (req,res)=>{
 
     res.json({
         shape
+    })
+})
+
+app.post("/userdetails",VerfiyToken,async(req,res)=>{
+  let userdetails;
+  try {
+       userdetails= await Database.user.findFirst({
+          where:{
+              id:req.userId
+              
+          }
+      });
+  } catch (e) {
+
+    res.json({
+        error:"e"
+    })
+    
+  }
+    res.json({
+        email :userdetails?.email,
+        name  :userdetails?.name,
+        photo :userdetails?.photo
     })
 })
 

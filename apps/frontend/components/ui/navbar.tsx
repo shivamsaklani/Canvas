@@ -11,9 +11,48 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { HTTP_BACKEND } from "@repo/backend-common/config";
+import axios from "axios";
 import { Palette, Settings, User, LogOut } from "lucide-react";
+import { headers } from "next/headers";
+import { useEffect, useState } from "react";
+
+interface userDetails{
+  name:string,
+  email:string,
+  imageurl:string | undefined
+}
 
 export function Navbar() {
+  let [user,setuser] = useState<userDetails>();
+  useEffect(()=>{
+    async function userDetails() {
+      try {
+        const response = await axios.post(HTTP_BACKEND+"/userdetails", {},
+          {
+            headers: {
+              authorization: localStorage.getItem("token"),
+            },
+          });
+        user= {
+          name:response.data.name,
+          email:response.data.email,
+          imageurl:response.data.photo
+        }
+        setuser(user);
+      } catch (e) {
+         setuser({
+          name:"",
+          email : "",
+          imageurl: undefined
+         })
+      }
+
+    
+    }
+    userDetails();
+  },[]);
+
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4 container mx-auto">
@@ -26,18 +65,17 @@ export function Navbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=faces" />
-                  <AvatarFallback>JD</AvatarFallback>
+                <Avatar className="h-8 w-8 bg-black">
+                  <AvatarImage src={user?.imageurl} />
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">Jane Doe</p>
+                  <p className="text-sm font-medium leading-none">{user?.name}</p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    jane@example.com
+                    {user?.email}
                   </p>
                 </div>
               </DropdownMenuLabel>
