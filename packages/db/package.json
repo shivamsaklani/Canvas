@@ -2,9 +2,8 @@
   "name": "@repo/db",
   "version": "1.0.0",
   "main": "index.js",
-  "exports":{
-    "./database":"./src/prisma.ts"
-
+  "exports": {
+    "./database": "./src/prisma.ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,9 +13,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "prisma": "6.2.1"
+    "prisma": "6.3.0"
   },
   "dependencies": {
-    "@prisma/client": "6.2.1"
+    "@prisma/client": "6.3.0"
   }
 }

@@ -11,13 +11,7 @@ type shapes ={
     center :number
 }
 
-export function resizeCanvas(canvas:HTMLCanvasElement){
-    canvas.height= window.innerHeight;
-    canvas.width =window.innerWidth;
-    const ctx = canvas.getContext("2d");
-    ctx?.scale(window.devicePixelRatio,window.devicePixelRatio);
 
-}
 
 export default async function InitDraw(canvas: HTMLCanvasElement,roomId:string,ws:WebSocket){
 

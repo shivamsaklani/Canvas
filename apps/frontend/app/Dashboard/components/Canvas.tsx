@@ -1,6 +1,6 @@
 "use client"
 import { Card } from "@/components/ui/card";
-import InitDraw, { resizeCanvas } from "@/DrawLogic/Draw";
+import InitDraw from "@/DrawLogic/Draw";
 import { useEffect, useRef } from "react";
 
 export function Canvas ({roomId, ws}:{
@@ -12,8 +12,6 @@ export function Canvas ({roomId, ws}:{
        
         if(canvasref.current){
             const canvas= canvasref.current;
-            
-            window.addEventListener('resize',()=>{resizeCanvas(canvas)});
 
            InitDraw(canvas,roomId,ws);
            
@@ -31,7 +29,7 @@ export function Canvas ({roomId, ws}:{
            
        
 
-    <canvas ref={canvasref} className="bg-red-300" height={window.innerHeight} width={window.innerWidth}></canvas>
+    <canvas ref={canvasref} className="bg-red-300" height="1080" width="720"></canvas>
   
    </div>
 }
