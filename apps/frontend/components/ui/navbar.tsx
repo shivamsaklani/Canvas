@@ -11,48 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HTTP_BACKEND } from "@repo/backend-common/config";
-import axios from "axios";
+import useUserDetails from "@/customhooks/UserDetails";
 import { Palette, Settings, User, LogOut } from "lucide-react";
-import { useEffect, useState } from "react";
-
-interface userDetails{
-  name:string,
-  email:string,
-  imageurl:string | undefined
-}
 
 export function Navbar() {
-  const [user,setuser] = useState<userDetails>();
-  useEffect(()=>{
-    async function userDetails() {
-      try {
-        const response = await axios.post(HTTP_BACKEND+"/userdetails", {},
-          {
-            headers: {
-              authorization: localStorage.getItem("token"),
-            },
-          });
-        const users= {
-          name:response.data.name,
-          email:response.data.email,
-          imageurl:response.data.photo
-        }
-        setuser(users);
-      } catch (e) {
-        console.log(e);
-         setuser({
-          name:"",
-          email : "",
-          imageurl: undefined
-         })
-      }
-
-    
-    }
-    userDetails();
-  },[]);
-
+  const user = useUserDetails();
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4 container mx-auto">

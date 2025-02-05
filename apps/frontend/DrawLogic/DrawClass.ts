@@ -63,9 +63,11 @@ export class DrawClass {
 
     }
     mouseDown = (e: MouseEvent) => {
-        this.clicked = true;
-        this.startX = e.clientX;
-        this.startY = e.clientY;
+         this.clicked = true;
+         this.startX = e.clientX;
+         this.startY = e.clientY;
+
+
 
     }
 
