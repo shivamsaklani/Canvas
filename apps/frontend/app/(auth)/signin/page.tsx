@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
 import Link from "next/link";
-import { use, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
 export default function SignIn(){
     const email = useRef<HTMLInputElement>(null);
+    const router=useRouter();
     const password = useRef<HTMLInputElement>(null);
     async function backend(){
        try {
@@ -23,6 +25,7 @@ export default function SignIn(){
       }
       else{
          localStorage.setItem("token",response.data.token);
+         router.push("/Dashboard");
 
       }
       
@@ -35,8 +38,7 @@ export default function SignIn(){
     }
    
     return <>
-       
-        <CardHeader className="font-black text-xl">SignIn</CardHeader>
+
         <CardContent className=" flex justify-center items-center flex-col gap-3 ">
         <Input ref={email} type="text" placeholder="Email" ></Input>
            <Input ref={password} type="password" placeholder="Password"></Input>

@@ -72,7 +72,6 @@ wss.on("connection",(ws:WebSocket,request)=>{
     
     ws.on("message",async (mesg:string)=>{
       const parsedData = JSON.parse(mesg.toString());  // { type = "joinroom" |"closeroom" | "createshape" ,roomId:"roomId"} add shapes for createshape
-      console.log(parsedData);
 
 
 

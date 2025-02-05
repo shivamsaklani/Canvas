@@ -23,7 +23,9 @@ export function UserAuth({roomId} :{roomId:string}){
             }));
 
         }    
-
+    () =>{
+        ws.close();
+    }
        
 
     },[roomId])
