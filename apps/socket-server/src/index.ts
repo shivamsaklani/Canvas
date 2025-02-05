@@ -125,7 +125,7 @@ wss.on("connection",(ws:WebSocket,request)=>{
 
             if(subscibeUser.rooms.includes(roomId)){
               subscibeUser.ws.send(JSON.stringify({
-                type:"shapes",
+                type:"createshape",
                 shape:shape,
                 roomId
               }))

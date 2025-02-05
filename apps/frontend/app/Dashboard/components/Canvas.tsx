@@ -22,14 +22,12 @@ export function Canvas ({roomId, ws}:{
 
 
 
-    return <div className=" bg-blue-300 flex  h-screen w-screen justify-center ">
+    return <div className=" bg-blue-300 h-screen w-screen ">
         
-       
-           <Card className="fixed h-10 mt-5 rounded">topbar</Card>
            
        
 
-    <canvas ref={canvasref} className="bg-red-300" height="1080" width="720"></canvas>
+    <canvas ref={canvasref} className="bg-red-300" height="720" width="1380"></canvas>
   
    </div>
 }

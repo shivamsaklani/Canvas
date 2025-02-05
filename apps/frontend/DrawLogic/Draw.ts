@@ -28,14 +28,13 @@ export default async function InitDraw(canvas: HTMLCanvasElement,roomId:string,w
     }
 
     ws.onmessage=(event)=>{
-        
         const parsedata = JSON.parse(event.data);
-        console.log(parsedata);
+        console.log("init draw"+ event.data);
         if(parsedata.type ==="createshape"){
             const data =JSON.parse(parsedata.shape);
-            console.log(data);
+            console.log(parsedata.shape);
             existingShapes.push(data.shape);
-            console.log(data);
+            console.log(data.shape);
             clearDraw(existingShapes,canvas);
 
         }

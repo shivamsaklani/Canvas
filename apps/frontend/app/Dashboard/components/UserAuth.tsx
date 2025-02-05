@@ -22,11 +22,7 @@ export function UserAuth({roomId} :{roomId:string}){
                 roomId:roomId
             }));
 
-        }       
-
-        return () => {
-            ws.close();
-        };
+        }    
 
        
 
