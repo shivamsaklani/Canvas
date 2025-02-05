@@ -14,7 +14,7 @@ export default function SignUp(){
     const username= useRef<HTMLInputElement>(null);
     async function backend(){
        try {
-      const response=await axios.post( `${HTTP_BACKEND}/signup`,{
+      await axios.post( `${HTTP_BACKEND}/signup`,{
         
             "email":email.current?.value,
             "password":password.current?.value,

@@ -1,5 +1,5 @@
 "use client"
-import { Brush, Link, Palette, Share2} from 'lucide-react';
+import { Brush, Palette, Share2} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';

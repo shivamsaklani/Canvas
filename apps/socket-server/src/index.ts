@@ -23,8 +23,6 @@ type shapes ={
 
 const Users:User[]=[];
 
-const existingShapes:shapes[]=[];
-
 
 function verifyUser(token:string):string |null{
     try {
@@ -42,7 +40,6 @@ function verifyUser(token:string):string |null{
       } catch(e) {
         return null;
       }
-    return null;
 }
 
 
@@ -54,7 +51,10 @@ wss.on("connection",(ws:WebSocket,request)=>{
         return;
     }
     const queryParams = new URLSearchParams(url.split('?')[1]);
-    const token =queryParams.get('token') ||"";
+    const token =queryParams.get('token');
+    if(!token){
+      return;
+    }
     const user =verifyUser(token) as string;
     if (Users.find(user=>{user.userId})) {
       return;
@@ -94,11 +94,10 @@ wss.on("connection",(ws:WebSocket,request)=>{
       }
       ///Create Shape///
 
-        if(parsedData.type === "createshape"){
+        if(parsedData.type === "createshape"){// give create authority to only the admin and not to all the users in the array
   
           const roomId=parsedData.roomId;
           const shape=parsedData.shape as string;
-
         
 
          try {
@@ -122,7 +121,7 @@ wss.on("connection",(ws:WebSocket,request)=>{
           // only subscribed Users can see realtime Creation of Shapes //
           Users.forEach(subscibeUser =>{
 
-            if(subscibeUser.rooms.includes(roomId)){
+            if(new Set(subscibeUser.rooms).has(roomId)){
               subscibeUser.ws.send(JSON.stringify({
                 type:"createshape",
                 shape:shape,

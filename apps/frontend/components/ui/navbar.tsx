@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,7 +14,6 @@ import {
 import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
 import { Palette, Settings, User, LogOut } from "lucide-react";
-import { headers } from "next/headers";
 import { useEffect, useState } from "react";
 
 interface userDetails{
@@ -24,7 +23,7 @@ interface userDetails{
 }
 
 export function Navbar() {
-  let [user,setuser] = useState<userDetails>();
+  const [user,setuser] = useState<userDetails>();
   useEffect(()=>{
     async function userDetails() {
       try {
@@ -34,13 +33,14 @@ export function Navbar() {
               authorization: localStorage.getItem("token"),
             },
           });
-        user= {
+        const users= {
           name:response.data.name,
           email:response.data.email,
           imageurl:response.data.photo
         }
-        setuser(user);
+        setuser(users);
       } catch (e) {
+        console.log(e);
          setuser({
           name:"",
           email : "",

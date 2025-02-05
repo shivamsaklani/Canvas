@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Canvas } from "./Canvas";
 import { WS_BACKEND } from "@repo/backend-common/config";
 
@@ -8,7 +8,6 @@ export function UserAuth({roomId} :{roomId:string}){
     const [socket,setsocket] =useState<WebSocket |null>(null);
     
   
-    
     useEffect(  ()=>{
         const token= localStorage.getItem("token");
         if(!token){
@@ -21,18 +20,16 @@ export function UserAuth({roomId} :{roomId:string}){
                 type:"joinroom",
                 roomId:roomId
             }));
+          
 
         }    
-    () =>{
-        ws.close();
-    }
        
 
     },[roomId])
   
-
+     
     if(!socket){
-        return <div> connecting to servers</div>;
+        return ;
     }
 
     return <Canvas roomId={roomId} ws ={socket}/>
