@@ -69,7 +69,8 @@ export class DrawClass {
                 this.ctx?.beginPath();
                 this.ctx?.moveTo(shape.startX,shape.startY);
                 this.ctx?.lineTo(shape.endX,shape.endY);
-                this.ctx?.stroke();               
+                this.ctx?.stroke(); 
+                break;              
            }
         })
 
@@ -100,14 +101,13 @@ export class DrawClass {
             }
             case tools.circle:{
                 let radius = Math.sqrt(w * w + h * h) / 2;
-                let centerX = this.startX + w/2;
-                let centerY = this.startY + h/2;
+                
               
     
                 shape = {
                     type: "circle",
-                    centerX: centerX,
-                    centerY: centerY,
+                    centerX: this.startX,
+                    centerY: this.startY,
                     radius: radius
                 }
     
@@ -126,6 +126,7 @@ export class DrawClass {
                 }
                 this.renderDraw();
                 this.ctx?.stroke();
+                break;
             }
         }
         if (!shape) {
