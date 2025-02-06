@@ -56,57 +56,79 @@ export class DrawClass {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.existingShapes.map((shape) => {
-            if (shape.type === "rect") {
-                this.ctx?.strokeRect(shape.x, shape.y, shape.width, shape.height);
-            }
-            else if(shape.type === "circle"){
+           switch(shape.type){
+            case "circle":
                 this.ctx?.beginPath();
-                this.ctx?.arc(shape.centerX,shape.centerY,Math.abs(shape.radius),0, Math.PI*2);
+                this.ctx?.arc(shape.centerX, shape.centerY, Math.abs(shape.radius), 0, Math.PI * 2);
                 this.ctx?.stroke();
                 this.ctx?.closePath();
-            }
+                break;
+            case "rect": this.ctx?.strokeRect(shape.x, shape.y, shape.width, shape.height);break;
+
+            case "line" : 
+                this.ctx?.beginPath();
+                this.ctx?.moveTo(shape.startX,shape.startY);
+                this.ctx?.lineTo(shape.endX,shape.endY);
+                this.ctx?.stroke();               
+           }
         })
 
     }
     mouseDown = (e: MouseEvent) => {
-         this.clicked = true;
-         this.startX = e.clientX;
-         this.startY = e.clientY;
+        this.clicked = true;
+        this.startX = e.clientX;
+        this.startY = e.clientY;
     }
 
     mouseUp = (e: MouseEvent) => {
-        let shape :shapes | null=null;
+        let shape: shapes | null = null;
         let X = this.startX;
         let Y = this.startY;
         this.clicked = false;
-        let w = Math.abs(e.clientX -X);
-        let h = Math.abs(e.clientY - Y);
-        if(this.selectedTool == "rectangle"){
-         shape = {
-                type: "rect",
-                x: X,
-                y: Y,
-                width: w,
-                height: h
+        let w = e.clientX - X;
+        let h = e.clientY - Y;
+        switch(this.selectedTool){
+            case tools.rect:{
+                shape = {
+                    type: "rect",
+                    x: X,
+                    y: Y,
+                    width: w,
+                    height: h
+                }
+                break;
+            }
+            case tools.circle:{
+                let radius = Math.sqrt(w * w + h * h) / 2;
+                let centerX = this.startX + w/2;
+                let centerY = this.startY + h/2;
+              
+    
+                shape = {
+                    type: "circle",
+                    centerX: centerX,
+                    centerY: centerY,
+                    radius: radius
+                }
+    
+                this.renderDraw();
+                this.ctx?.stroke();
+                break;
+
+            }
+            case tools.line:{
+                shape = {
+                    type : "line",
+                    startX:this.startX,
+                    startY:this.startY,
+                    endX:e.clientX,
+                    endY:e.clientY
+                }
+                this.renderDraw();
+                this.ctx?.stroke();
             }
         }
-        if(this.selectedTool == "circle"){
-            let radius = Math.max((w+h)/2);
-            let centerY = X+ radius;
-            let centerX = X +radius;
-        
-            shape = {
-                type :"circle",
-                centerX : centerX,
-                centerY : centerY,
-                radius : radius
-             }
-           
-             this.renderDraw();
-             this.ctx?.stroke();
-
-        }
-        if(!shape){
+        if (!shape) {
             return;
         }
 
@@ -121,32 +143,41 @@ export class DrawClass {
             ),
             roomId: this.roomId
         }))
-        
+
     }
 
     mouseMove = (e: MouseEvent) => {
-     
-        if (this.clicked) {
-            let w = Math.abs(e.clientX - this.startX);
-            let h = Math.abs(e.clientY - this.startY);
-            this.clicked =false; 
+
+        let w = Math.abs(e.clientX - this.startX);
+        let h = Math.abs(e.clientY - this.startY);
+
+        if(this.clicked===true){
             this.renderDraw();
-           if (this.selectedTool == "rectangle") {
-             this.ctx?.strokeRect(this.startX, this.startY, w, h);
-           }
-           if(this.selectedTool == "circle"){
-         
-            let radius = Math.abs((e.clientX + e.clientY)/2);
-            let centerX = this.startX +radius;
-            let centerY = this.startY + radius;
-            this.ctx?.beginPath();
-            this.ctx?.arc(centerX,centerY,radius,0,2*Math.PI);
-            this.ctx?.closePath();
+            switch (this.selectedTool) {
+                case tools.rect:
+                    this.ctx?.strokeRect(this.startX, this.startY, w, h);
+                    break;
+                case tools.circle:
+                    let dX = e.clientX-this.startX;
+                    let dY = e.clientY -this.startY;
+                    let radius = Math.sqrt(dX*dX + dY*dY)/2;
+                    this.ctx?.beginPath();
+                    this.ctx?.arc(this.startX, this.startY, radius, 0, 2 * Math.PI);
+                    this.ctx?.stroke();
+                    this.ctx?.closePath();
+                    break;
+                case tools.line:
 
-           }
-
+                    this.ctx?.beginPath();
+                    this.ctx?.moveTo(this.startX,this.startY);
+                    this.ctx?.lineTo(e.clientX,e.clientY);
+                    this.ctx?.stroke();
+                    break;
+            }
 
         }
+      
+
 
     }
 

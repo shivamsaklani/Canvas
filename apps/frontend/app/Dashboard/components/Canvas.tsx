@@ -4,7 +4,7 @@ import useUserDetails from "@/customhooks/UserDetails";
 import useWindowSize from "@/customhooks/windowSize";
 import { DrawClass } from "@/DrawLogic/DrawClass";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { ArrowBigLeft, ArrowRight, Circle, Eraser, PencilLine, RectangleHorizontalIcon, ZoomInIcon } from "lucide-react";
+import { ArrowBigLeft, ArrowRight, Circle, Eraser, PencilLine, PenLine, RectangleHorizontalIcon, ZoomInIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export enum tools {
@@ -12,8 +12,9 @@ export enum tools {
     rect = "rectangle",
     pencile = "pencile",
     zoom = "zoom",
-    Eraser = "Eraser",
-    Arrow = "Arrow"
+    eraser = "Eraser",
+    arrow = "Arrow",
+    line = "Line"
 }
 
 export function Canvas ({roomId, ws}:{
@@ -73,8 +74,9 @@ function Topbar({Selected,setSelected}:{
         <HomeIcons activated={Selected == tools.rect} icon={<RectangleHorizontalIcon/>} onclick={()=>{setSelected(tools.rect)}}/> 
         <HomeIcons activated={Selected == tools.circle} icon={<Circle/>} onclick={()=>{setSelected(tools.circle)}}/> 
         <HomeIcons activated={Selected == tools.zoom} icon={<ZoomInIcon/>} onclick={()=>{setSelected(tools.zoom)}}/> 
-        <HomeIcons activated={Selected == tools.Eraser} icon={<Eraser/>} onclick={()=>{setSelected(tools.Eraser)}}/> 
-        <HomeIcons activated={Selected == tools.Arrow} icon={<ArrowRight/>} onclick={()=>{setSelected(tools.Arrow)}}/> 
+        <HomeIcons activated={Selected == tools.eraser} icon={<Eraser/>} onclick={()=>{setSelected(tools.eraser)}}/> 
+        <HomeIcons activated={Selected == tools.arrow} icon={<ArrowRight/>} onclick={()=>{setSelected(tools.arrow)}}/> 
+        <HomeIcons activated={Selected == tools.line} icon={<PenLine/>} onclick={()=>setSelected(tools.line)}/>
         
     </div>
     )
