@@ -38,7 +38,7 @@ export class DrawClass {
     setTool(tools: tools) {
         this.selectedTool = tools;
     }
-    createShapes() {
+    createShapes() { // pushes to the existing shapes array//
         this.ws.onmessage = (event) => {
             const parsedata = JSON.parse(event.data);
             if (parsedata.type === "createshape") {
@@ -59,6 +59,12 @@ export class DrawClass {
             if (shape.type === "rect") {
                 this.ctx?.strokeRect(shape.x, shape.y, shape.width, shape.height);
             }
+            else if(shape.type === "circle"){
+                this.ctx?.beginPath();
+                this.ctx?.arc(shape.centerX,shape.centerY,Math.abs(shape.radius),0, Math.PI*2);
+                this.ctx?.stroke();
+                this.ctx?.closePath();
+            }
         })
 
     }
@@ -66,20 +72,16 @@ export class DrawClass {
          this.clicked = true;
          this.startX = e.clientX;
          this.startY = e.clientY;
-
-
-
     }
 
     mouseUp = (e: MouseEvent) => {
-        let shape:shapes;
-        if(this.selectedTool == "rectangle"){
-            this.clicked = false;
+        let shape :shapes | null=null;
         let X = this.startX;
         let Y = this.startY;
-        let w = Math.abs(e.clientX - this.startX);
-        let h = Math.abs(e.clientY - this.startY);
-
+        this.clicked = false;
+        let w = Math.abs(e.clientX -X);
+        let h = Math.abs(e.clientY - Y);
+        if(this.selectedTool == "rectangle"){
          shape = {
                 type: "rect",
                 x: X,
@@ -87,33 +89,60 @@ export class DrawClass {
                 width: w,
                 height: h
             }
-            this.ws.send(JSON.stringify({
-                type: "createshape",
-                shape: JSON.stringify(
-                    {
-                        shape
-                    }
-                ),
-                roomId: this.roomId
-    
-    
-            }))
-    
+        }
+        if(this.selectedTool == "circle"){
+            let radius = Math.max((w+h)/2);
+            let centerY = X+ radius;
+            let centerX = X +radius;
+        
+            shape = {
+                type :"circle",
+                centerX : centerX,
+                centerY : centerY,
+                radius : radius
+             }
+           
+             this.renderDraw();
+             this.ctx?.stroke();
 
         }
-       
+        if(!shape){
+            return;
+        }
 
+        this.existingShapes.push(shape);
 
+        this.ws.send(JSON.stringify({
+            type: "createshape",
+            shape: JSON.stringify(
+                {
+                    shape
+                }
+            ),
+            roomId: this.roomId
+        }))
         
     }
 
     mouseMove = (e: MouseEvent) => {
+     
         if (this.clicked) {
+            let w = Math.abs(e.clientX - this.startX);
+            let h = Math.abs(e.clientY - this.startY);
+            this.clicked =false; 
+            this.renderDraw();
            if (this.selectedTool == "rectangle") {
-             let w = Math.abs(e.clientX - this.startX);
-             let h = Math.abs(e.clientY - this.startY);
-             this.renderDraw();
              this.ctx?.strokeRect(this.startX, this.startY, w, h);
+           }
+           if(this.selectedTool == "circle"){
+         
+            let radius = Math.abs((e.clientX + e.clientY)/2);
+            let centerX = this.startX +radius;
+            let centerY = this.startY + radius;
+            this.ctx?.beginPath();
+            this.ctx?.arc(centerX,centerY,radius,0,2*Math.PI);
+            this.ctx?.closePath();
+
            }
 
 
