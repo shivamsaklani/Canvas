@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import { Canvas } from "./Canvas";
 import { WS_BACKEND } from "@repo/backend-common/config";
+import useCheckRoom from "@/customhooks/checkRoom";
 
-export function UserAuth({roomId} :{roomId:string}){
+export function UserAuth({roomslug} :{roomslug:string}){
    
     const [socket,setsocket] =useState<WebSocket |null>(null);
-    
-  
-    useEffect(  ()=>{
+    const roomId = useCheckRoom(roomslug);
+    useEffect(()=>{
         const token= localStorage.getItem("token");
         if(!token){
             return;
@@ -20,16 +20,17 @@ export function UserAuth({roomId} :{roomId:string}){
                 type:"joinroom",
                 roomId:roomId
             }));
-          
-
         }    
        
 
     },[roomId])
   
      
+    if(!roomId){
+        return <div>Room is not valid</div>;
+    }
     if(!socket){
-        return ;
+        return <div>User not defined</div>;
     }
 
     return <Canvas roomId={roomId} ws ={socket}/>

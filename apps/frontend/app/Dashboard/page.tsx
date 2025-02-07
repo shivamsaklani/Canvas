@@ -3,30 +3,20 @@ import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Navbar } from "@/components/ui/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, UserCircle, Users } from "lucide-react";
+import { PlusCircle, UserCircle, Users2, Users2Icon } from "lucide-react";
 import Dashcard from "@/components/ui/dashcard";
+import RoomCard from "./components/RoomCard";
 
 export default function Dashboard() {
     const router =useRouter();
     const roomName = useRef<HTMLInputElement>(null);
-    const roomId = useRef<HTMLInputElement>(null);
+    const roomslug = useRef<HTMLInputElement>(null);
     
     async function joinroom(){
-       const roomid = roomId.current?.value;
-
-      try {
-          const room = await axios.get(`${HTTP_BACKEND}/room/`+roomid);
-          router.push("/Dashboard/rooms/"+room.data.roomId);
-      } catch (error) {
-        console.log(error);
-        
-      }
-       
+       const room = roomslug.current?.value;
+        router.push("/Dashboard/rooms/"+room);  
      }
 
     async function createroom(){
@@ -59,51 +49,24 @@ export default function Dashboard() {
           <p className="text-muted-foreground mt-2">Create or join collaborative canvas rooms</p>
         </div>
 
-        <Tabs defaultValue="create" className="space-y-4">
+        <Tabs defaultValue="create" className="space-y-10">
           <TabsList>
             <TabsTrigger value="create">Create Room</TabsTrigger>
             <TabsTrigger value="join">Join Room</TabsTrigger>
+            <TabsTrigger value="rooms">Rooms</TabsTrigger>
           </TabsList>
 
           <TabsContent value="create">
-            <Card>
-              <CardHeader>
-                <CardTitle>Create a New Room</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <Input ref={roomName} placeholder="Room Name" />
-                  </div>
-                  <Button onClick={createroom}>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Create Room
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <RoomCard reference={roomName} btnfun={createroom} title="Create room" placeholder="Enter room Name" button="Create room" Icon={PlusCircle} />
           </TabsContent>
 
           <TabsContent value="join">
-            <Card>
-              <CardHeader>
-                <CardTitle>Join Existing Room</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <Input ref={roomId}
-                      placeholder="Enter Room Code"
-                    />
-                  </div>
-                  <Button onClick={joinroom}>
-                    <Users className="mr-2 h-4 w-4" />
-                    Join Room
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <RoomCard reference={roomslug} btnfun={joinroom} title="Join room" placeholder="Enter room Name" button="Join room" Icon ={Users2} />
           </TabsContent>
+          <TabsContent value="rooms">
+            <Dashcard title="Rooms" content="3" icon={Users2Icon}/>
+          </TabsContent>
+
         </Tabs>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">

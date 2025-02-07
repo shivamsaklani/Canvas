@@ -186,6 +186,8 @@ export class DrawClass {
         this.canvas.addEventListener("mousedown", this.mouseDown);
         this.canvas.addEventListener("mouseup", this.mouseUp);
         this.canvas.addEventListener("mousemove", this.mouseMove);
+        this.canvas.addEventListener("keydown",this.keydown);
+        this.canvas.addEventListener("keyup",this.keyup);
     }
 
 

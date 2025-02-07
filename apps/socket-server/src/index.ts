@@ -94,8 +94,7 @@ wss.on("connection",(ws:WebSocket,request)=>{
       }
       ///Create Shape///
 
-        if(parsedData.type === "createshape"){// give create authority to only the admin and not to all the users in the array
-  
+        if(parsedData.type === "createshape"){
           const roomId=parsedData.roomId;
           const shape=parsedData.shape as string;
         
