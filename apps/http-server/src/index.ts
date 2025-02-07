@@ -137,12 +137,19 @@ app.post("/createroom",VerfiyToken,async (req,res)=>{
 app.get("/room/:slugId",async (req,res)=>{
   const slugId= req.params.slugId;
 
-  const data =await Database.room.findFirst({
-    where:{
-        slug:slugId
-
-    }
-  });
+  let data;
+  try {
+    data = await Database.room.findFirst({
+      where:{
+          slug:slugId
+  
+      }
+    });
+  } catch (error) {
+    res.json({
+        error
+    })
+  }
 
   res.json({
     roomId:data?.id
@@ -152,19 +159,35 @@ app.get("/room/:slugId",async (req,res)=>{
 
 app.get("/canvas/:roomid",async (req,res)=>{
     const roomId=Number(req.params.roomid);
+    let shape;
+    if(!roomId){
+        res.json({
+            message:"roomId not found"
+        });
+        return;
+    }
 
-    const shape = await Database.shapes.findMany(
-        {
-            where:{
-                roomId:roomId
-            },
-            orderBy:{
-                id:"desc"
-            },
-            take: 1000
-            
-        }
-    )
+   try {
+     shape = await Database.shapes.findMany(
+         {
+             where:{
+                 roomId:roomId
+             },
+             orderBy:{
+                 id:"desc"
+             },
+             take: 1000
+             
+         }
+     )
+   } catch (error) {
+      res.json({
+        message:"error" + error
+    
+      })
+      return;
+    
+   }
 
     res.json({
         shape
