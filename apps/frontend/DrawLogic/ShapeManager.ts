@@ -4,12 +4,13 @@ export default class ShapeManager {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D | null;
     private shapes: ShapeClass[];
-
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.shapes = [];
     }
+
+   
 
     addShape(shape: ShapeClass) {
         this.shapes.push(shape);

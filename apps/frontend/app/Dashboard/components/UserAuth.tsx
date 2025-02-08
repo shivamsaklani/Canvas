@@ -21,11 +21,12 @@ export function UserAuth({roomslug} :{roomslug:string}){
                 roomId:roomId
             }));
         }    
-
+        ws.onclose = () => {
+            setsocket(null); // Clear socket when connection closes
+          };
         return ()=>{
             ws.close();
         }
-
     },[roomId])
       
      

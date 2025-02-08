@@ -25,6 +25,7 @@ export default class DrawHandler {
         this.shapeManager = new ShapeManager(canvas);
 
         this.loadStoredShapes();
+        this.renderShapes();
         this.initHandlers();
     }
 
@@ -53,6 +54,44 @@ export default class DrawHandler {
         }
     }
 
+    renderShapes() {
+        this.ws.onmessage = (e) => {
+
+            try {
+                const parsedData = JSON.parse(e.data);
+              
+                if (parsedData.type === "createshape") {
+                    const data = JSON.parse(parsedData.shape); // Correctly parse the shape object
+                    console.log(data.shape.type);
+                    console.log(data.shape);
+                    let shape;
+                    switch (data.shape.type) { // Switch on the correct key
+                        case "circle":
+                            shape = new CircleClass(this.canvas, data.shape.centerX, data.shape.centerY, data.shape.radius);
+                            break;
+                        case "rectangle":
+                            shape = new RectangleClass(this.canvas, data.shape.x, data.shape.y, data.shape.width, data.shape.height);
+                            break;
+                        case "line":
+                            shape = new LineClass(this.canvas, data.shape.startX, data.shape.startY, data.shape.endX, data.shape.endY);
+                            break;
+                        default:
+                            console.warn("Unknown shape type:", data.shape.type);
+                    }
+    
+                    if (shape) {
+                        this.shapeManager.addShape(shape);
+                        this.ctx?.clearRect(0,0,this.canvas.width,this.canvas.height);
+                        this.shapeManager.render();
+                    }
+                }
+            } catch (error) {
+                console.error("Error processing WebSocket data:", error);
+            }
+        };
+    }
+    
+
     destroyHandler(){
         this.canvas.removeEventListener("mousedown",this.mouseDown);
         this.canvas.removeEventListener("mouseup", this.mouseUp);
@@ -72,13 +111,11 @@ export default class DrawHandler {
     }
 
     mouseUp = (e: MouseEvent) => {
-        console.log("MouseUp Triggered - Selected Tool:", this.selectedTool);
-        if (this.clicked) {
+          if (this.clicked) {
             this.clicked = false;
             let shape: ShapeClass| null = null;
             let endX = e.clientX;
             let endY = e.clientY;
-            console.log(this.selectedTool);
     
             switch (this.selectedTool) {
                 case tools.rect:
