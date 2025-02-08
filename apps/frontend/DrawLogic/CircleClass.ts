@@ -19,4 +19,15 @@ export default class CircleClass extends ShapeClass {
         this.ctx.stroke();
         this.ctx.closePath();
     }
+    ToJson(){
+        return {
+            "shape":{
+            type:"circle",
+            centerX:this.centerX,
+            centerY:this.centerY,
+            radius:this.radius
+            }
+         
+        }
+    }
 }

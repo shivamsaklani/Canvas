@@ -21,10 +21,13 @@ export function UserAuth({roomslug} :{roomslug:string}){
                 roomId:roomId
             }));
         }    
-       
+
+        return ()=>{
+            ws.close();
+        }
 
     },[roomId])
-  
+      
      
     if(!roomId){
         return <div>Room is not valid</div>;

@@ -2,7 +2,9 @@
 import HomeIcons from "@/components/ui/homeicons";
 import useUserDetails from "@/customhooks/UserDetails";
 import useWindowSize from "@/customhooks/windowSize";
-import { DrawClass } from "@/DrawLogic/DrawClass";
+import DrawHandler from "@/DrawLogic/DrawHandler";
+import ShapeClass from "@/DrawLogic/ShapeClass";
+import ShapeManager from "@/DrawLogic/ShapeManager";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { ArrowRight, Circle, Eraser, PencilLine, PenLine, RectangleHorizontalIcon, Text, TextIcon, Type, ZoomInIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -22,28 +24,36 @@ export function Canvas ({roomId, ws}:{
     roomId:string,
     ws:WebSocket
 }){
-    const [Drawing,setDrawing] = useState<DrawClass>();
-    const [Selected,setSelected]=useState<tools>(tools.rect);
+    const Drawref = useRef<DrawHandler | null>(null);
+    const [Selected,setSelected]=useState<tools>(tools.circle);
     const windowsize = useWindowSize();
     const user = useUserDetails();
     const canvasref=useRef<HTMLCanvasElement>(null); // make this as global state 
-    useEffect(()=>{
-        Drawing?.setTool(Selected);
-
-    },[Drawing,Selected]);
+    
     
     useEffect(()=>{
        
         if(canvasref.current){
             const canvas= canvasref.current;
-        const d =new DrawClass(canvas,roomId,ws);
-        setDrawing(d);
+            Drawref.current = new DrawHandler(canvas,roomId,ws);
 
-        return () =>{
-            d.destroy();   
-        }  
         }
-    },[canvasref,roomId,ws])
+
+        return () => {
+            if (Drawref.current) {
+                Drawref.current.destroyHandler(); // Cleanup on component unmount
+                Drawref.current = null;
+            }
+        };
+    },[roomId,ws]);
+
+    useEffect(()=>{
+        if(Drawref.current){
+            Drawref.current.setTools(Selected);
+        }
+     
+
+    },[Selected]);
 
 
 

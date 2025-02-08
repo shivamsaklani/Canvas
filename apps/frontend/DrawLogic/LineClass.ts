@@ -21,4 +21,16 @@ export default class LineClass extends ShapeClass {
         this.ctx.lineTo(this.endX, this.endY);
         this.ctx.stroke();
     }
+    ToJson(){
+        return {
+            "shape":{
+            type:"line",
+            startX:this.startX,
+            startY:this.startY,
+            endX:this.endX,
+            endY:this.endY
+        }
+         
+        }
+    }
 }

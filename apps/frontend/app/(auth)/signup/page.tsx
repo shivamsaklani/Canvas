@@ -34,7 +34,7 @@ export default function SignUp(){
         <CardContent className=" flex justify-center items-center flex-col gap-3 ">
         <Input ref={email} type="text" placeholder="Email" ></Input>
            <Input ref={password} type="password" placeholder="Password"></Input>
-           <Input ref={username} type="text" placeholder="Enter your name"></Input>
+           <Input ref={username} onKeyDown={(e)=>{ if (e.key === "Enter"){backend()}}} type="text" placeholder="Enter your name"></Input>
         <Button onClick={backend} size="lg" className="text-md" >SignUp</Button>
         <div className="flex font-light text-gray items-start justify-end w-full">
         <Link href="./signin">login</Link>

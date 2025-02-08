@@ -25,6 +25,7 @@ export default function RoomCard({reference,placeholder,Icon:Icon,btnfun,title,b
             <div>
               <Input ref={reference}
                 placeholder={placeholder}
+                onKeyDown={(e)=>{ if (e.key === "Enter"){btnfun()}}}
               />
             </div>
             <Button onClick={btnfun}>

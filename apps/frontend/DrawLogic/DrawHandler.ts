@@ -28,12 +28,16 @@ export default class DrawHandler {
         this.initHandlers();
     }
 
+    setTools(tools:tools){
+        this.selectedTool = tools;
+    }
+
     async loadStoredShapes() {
         try {
             const storedShapes = await StoredShapes(this.roomId);
             storedShapes.forEach((shape: any) => {
                 switch (shape.type) {
-                    case "rect":
+                    case "rectangle":
                         this.shapeManager.addShape(new RectangleClass(this.canvas, shape.x, shape.y, shape.width, shape.height));
                         break;
                     case "circle":
@@ -49,9 +53,16 @@ export default class DrawHandler {
         }
     }
 
+    destroyHandler(){
+        this.canvas.removeEventListener("mousedown",this.mouseDown);
+        this.canvas.removeEventListener("mouseup", this.mouseUp);
+        this.canvas.removeEventListener("mousemove",this.mouseMove);
+    }
+
     initHandlers() {
         this.canvas.addEventListener("mousedown", this.mouseDown);
         this.canvas.addEventListener("mouseup", this.mouseUp);
+        this.canvas.addEventListener("mousemove",this.mouseMove);
     }
 
     mouseDown = (e: MouseEvent) => {
@@ -61,33 +72,71 @@ export default class DrawHandler {
     }
 
     mouseUp = (e: MouseEvent) => {
-        this.clicked = false;
-        let shape: ShapeClass| null = null;
-        let endX = e.clientX;
-        let endY = e.clientY;
+        console.log("MouseUp Triggered - Selected Tool:", this.selectedTool);
+        if (this.clicked) {
+            this.clicked = false;
+            let shape: ShapeClass| null = null;
+            let endX = e.clientX;
+            let endY = e.clientY;
+            console.log(this.selectedTool);
+    
+            switch (this.selectedTool) {
+                case tools.rect:
+                    shape = new RectangleClass(this.canvas, this.startX, this.startY, endX - this.startX, endY - this.startY);
+                    break;
+                case tools.circle:
+                    let radius = Math.sqrt((endX - this.startX) ** 2 + (endY - this.startY) ** 2) / 2;
+                    shape = new CircleClass(this.canvas, this.startX, this.startY, radius);
+                    break;
+                case tools.line:
+                    shape = new LineClass(this.canvas, this.startX, this.startY, endX, endY);
+                    break;
+            
+            }
+            if (shape) {
+                this.ctx?.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.shapeManager.addShape(shape);
 
+              
+                // Send shape to WebSocket
+                this.ws.send(JSON.stringify({
+                    type: "createshape",
+                    shape: JSON.stringify(shape.ToJson()),
+                    roomId: this.roomId
+                }));
+            }
+        }
+
+       
+    }
+    mouseMove = (e: MouseEvent) => {
+        if (!this.clicked || !this.ctx) return;
+    
+        const endX = e.clientX - this.canvas.offsetLeft;
+        const endY = e.clientY - this.canvas.offsetTop;
+    
+        // Clear canvas before drawing new shape
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Redraw existing shapes before drawing new preview
+        this.shapeManager.render();
+    
+        this.ctx.beginPath(); // Start new drawing path
+    
         switch (this.selectedTool) {
             case tools.rect:
-                shape = new RectangleClass(this.canvas, this.startX, this.startY, endX - this.startX, endY - this.startY);
+                this.ctx.strokeRect(this.startX, this.startY, endX - this.startX, endY - this.startY);
                 break;
             case tools.circle:
-                let radius = Math.sqrt((endX - this.startX) ** 2 + (endY - this.startY) ** 2) / 2;
-                shape = new CircleClass(this.canvas, this.startX, this.startY, radius);
+                const radius = Math.sqrt((endX - this.startX) ** 2 + (endY - this.startY) ** 2) / 2;
+                this.ctx.arc(this.startX, this.startY, radius, 0, Math.PI * 2);
                 break;
             case tools.line:
-                shape = new LineClass(this.canvas, this.startX, this.startY, endX, endY);
+                this.ctx.moveTo(this.startX, this.startY);
+                this.ctx.lineTo(endX, endY);
                 break;
         }
-
-        if (shape) {
-            this.shapeManager.addShape(shape);
-
-            // Send shape to WebSocket
-            this.ws.send(JSON.stringify({
-                type: "createshape",
-                shape: JSON.stringify(shape),
-                roomId: this.roomId
-            }));
-        }
-    }
+        this.ctx.stroke();
+    };
+    
 }

@@ -10,4 +10,8 @@ export default class ShapeClass {
     draw() {
         // This will be overridden by subclasses
     }
+
+    ToJson(){
+
+    }
 }

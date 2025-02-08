@@ -18,4 +18,16 @@ export default class RectangleClass extends ShapeClass {
         if (!this.ctx) return;
         this.ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
+    ToJson(){
+        return {
+            "shape":{
+            type:"rectangle",
+            x :this.x,
+            y:this.y,
+            width:this.width,
+            height:this.height
+        }
+         
+        }
+    }
 }
