@@ -3,12 +3,10 @@ import HomeIcons from "@/components/ui/homeicons";
 import useUserDetails from "@/customhooks/UserDetails";
 import useWindowSize from "@/customhooks/windowSize";
 import DrawHandler from "@/DrawLogic/DrawHandler";
-import ShapeClass from "@/DrawLogic/ShapeClass";
-import ShapeManager from "@/DrawLogic/ShapeManager";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { ArrowRight, Circle, Eraser, PencilLine, PenLine, RectangleHorizontalIcon, Text, TextIcon, Type, ZoomInIcon } from "lucide-react";
+import { ArrowRight, Circle, Eraser, PenLine, RectangleHorizontalIcon, Text, TextIcon, Type, ZoomInIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
+const image ="/photo.jpg";
 export enum tools {
     circle = "circle",
     rect = "rectangle",
@@ -57,11 +55,11 @@ export function Canvas ({roomId, ws}:{
 
 
 
-    return <div className=" bg-blue-300 flex justify-center h-screen w-screen ">
+    return <div className="flex justify-center h-screen w-screen ">
 
       <div className="fixed pt-3 hidden sm:flex w-screen p-3 justify-end">
-    <Avatar className="h-12 w-12 bg-black rounded-full">
-                  <AvatarImage src={user?.imageurl} />
+    <Avatar className="h-12 w-12 rounded-full">
+                  <AvatarImage src={ user?.imageurl || image } />
     </Avatar>
     </div>
     <Topbar Selected={Selected} setSelected={setSelected} />

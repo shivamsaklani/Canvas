@@ -62,8 +62,6 @@ export default class DrawHandler {
               
                 if (parsedData.type === "createshape") {
                     const data = JSON.parse(parsedData.shape); // Correctly parse the shape object
-                    console.log(data.shape.type);
-                    console.log(data.shape);
                     let shape;
                     switch (data.shape.type) { // Switch on the correct key
                         case "circle":

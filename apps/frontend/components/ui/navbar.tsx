@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useUserDetails from "@/customhooks/UserDetails";
 import { Palette, Settings, User, LogOut } from "lucide-react";
-
+const image ="/photo.jpg";
 export function Navbar() {
   const user = useUserDetails();
   return (
@@ -29,7 +29,7 @@ export function Navbar() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8 bg-black">
-                  <AvatarImage src={user?.imageurl} />
+                  <AvatarImage src={user?.imageurl || image} />
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>

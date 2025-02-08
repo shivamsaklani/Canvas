@@ -8,7 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, UserCircle, Users2, Users2Icon } from "lucide-react";
 import Dashcard from "@/components/ui/dashcard";
 import RoomCard from "./components/RoomCard";
-
 export default function Dashboard() {
     const router =useRouter();
     const roomName = useRef<HTMLInputElement>(null);
