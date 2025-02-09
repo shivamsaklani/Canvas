@@ -1,18 +1,19 @@
 "use client"
 import HomeIcons from "@/app/Dashboard/components/homeicons";
-import { Globalcanvasref } from "@/app/Globalstates/Canvas";
+import { Globalcanvasref } from "@/app/Globalstates/CanvasRef";
+import { GlobalSelectedTool } from "@/app/Globalstates/SelectedTool";
 import useUserDetails from "@/customhooks/UserDetails";
 import useWindowSize from "@/customhooks/windowSize";
 import DrawHandler from "@/DrawLogic/DrawHandler";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { ArrowRight, Circle, Eraser, PenLine, RectangleHorizontalIcon, Text, TextIcon, Type, ZoomInIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Circle, Eraser, Menu, PenLine, RectangleHorizontalIcon, Type, ZoomIn, ZoomInIcon, ZoomOut } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 const image ="/photo.jpg";
 export enum tools {
     circle = "circle",
     rect = "rectangle",
-    line = "pencile",
+    line = "line",
     zoom = "zoom",
     eraser = "eraser",
     arrow = "arrow",
@@ -25,12 +26,10 @@ export function Canvas ({roomId, ws}:{
     ws:WebSocket
 }){
     const Drawref = useRef<DrawHandler | null>(null);
-    const [Selected,setSelected]=useState<tools>(tools.rect);
+    const [Selected,setSelected]=useRecoilState(GlobalSelectedTool);
     const windowsize = useWindowSize();
     const user = useUserDetails();
     const [canvasref,setcanvasref] = useRecoilState(Globalcanvasref); 
-    
-    
     useEffect(()=>{
        
         if(canvasref){
@@ -62,7 +61,12 @@ export function Canvas ({roomId, ws}:{
 
 
 
-    return <div className="flex justify-center h-screen w-screen ">
+    return <>
+    <div className="flex justify-center h-screen w-screen ">
+
+        <div className="absolute p-1 bg-blue-200 rounded-md top-5 left-5">
+            <Menu/>
+        </div>
 
       <div className="fixed pt-3 hidden sm:flex w-screen p-3 justify-end">
     <Avatar className="h-12 w-12 rounded-full">
@@ -74,9 +78,16 @@ export function Canvas ({roomId, ws}:{
            
        
 
-    <canvas ref={(event)=>{if(event) setcanvasref(event)}} height={windowsize.height} width={windowsize.width} className="bg-red-50"></canvas>
-  
+    <canvas ref={(event)=>{if(event) setcanvasref(event)}} height={windowsize.height} width={windowsize.width}></canvas>
+    
+    <div className="absolute bottom-10 left-10 grid grid-cols-3 bg-gray-50 rounded-lg shadow-lg z-5">
+  <button className="flex justify-center items-center border-white p-2 rounded-tl-md rounded-bl-md active:border-blue-200 active:border"><ZoomIn/></button>
+  <div className="flex justify-center items-center">100%</div>
+  <button className="flex justify-center items-center p-2 border-white rounded-tr-md rounded-br-md active:border-blue-200 active:border"><ZoomOut/></button>
+</div>
    </div>
+
+   </> 
 }
 
 

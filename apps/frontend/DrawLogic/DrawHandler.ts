@@ -23,7 +23,7 @@ export default class DrawHandler {
         this.roomId = roomId;
         this.ws = ws;
         this.shapeManager = new ShapeManager(canvas);
-
+        console.log(this.shapeManager);
         this.loadStoredShapes();
         this.renderShapes();
         this.initHandlers();
