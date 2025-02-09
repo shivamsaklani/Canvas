@@ -1,6 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { CardContent} from "@/components/ui/card";
+import { CardContent} from "@/app/Dashboard/components/card";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useRef } from "react";

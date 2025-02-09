@@ -1,6 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
+import { CardContent } from "@/app/Dashboard/components/card";
 import { Input } from "@/components/ui/input";
 import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";

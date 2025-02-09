@@ -1,4 +1,4 @@
-import { Card} from "@/components/ui/card";
+import { Card} from "@/app/Dashboard/components/card";
 import { ReactNode } from "react";
 
 export default function AuthLayout({children}:{

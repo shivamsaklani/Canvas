@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/app/Dashboard/components/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

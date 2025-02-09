@@ -1,7 +1,7 @@
 "use client"
 import { Brush, Palette, Share2} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/app/Dashboard/components/card';
 import { useRouter } from 'next/navigation';
 export default function Home() {
   const router = useRouter();

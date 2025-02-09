@@ -1,11 +1,13 @@
 "use client"
-import HomeIcons from "@/components/ui/homeicons";
+import HomeIcons from "@/app/Dashboard/components/homeicons";
+import { Globalcanvasref } from "@/app/Globalstates/Canvas";
 import useUserDetails from "@/customhooks/UserDetails";
 import useWindowSize from "@/customhooks/windowSize";
 import DrawHandler from "@/DrawLogic/DrawHandler";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { ArrowRight, Circle, Eraser, PenLine, RectangleHorizontalIcon, Text, TextIcon, Type, ZoomInIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useRecoilState } from "recoil";
 const image ="/photo.jpg";
 export enum tools {
     circle = "circle",
@@ -23,16 +25,16 @@ export function Canvas ({roomId, ws}:{
     ws:WebSocket
 }){
     const Drawref = useRef<DrawHandler | null>(null);
-    const [Selected,setSelected]=useState<tools>(tools.circle);
+    const [Selected,setSelected]=useState<tools>(tools.rect);
     const windowsize = useWindowSize();
     const user = useUserDetails();
-    const canvasref=useRef<HTMLCanvasElement>(null); // make this as global state 
+    const [canvasref,setcanvasref] = useRecoilState(Globalcanvasref); 
     
     
     useEffect(()=>{
        
-        if(canvasref.current){
-            const canvas= canvasref.current;
+        if(canvasref){
+            const canvas= canvasref;
             Drawref.current = new DrawHandler(canvas,roomId,ws);
 
         }
@@ -43,15 +45,20 @@ export function Canvas ({roomId, ws}:{
                 Drawref.current = null;
             }
         };
-    },[roomId,ws]);
+    },[roomId,ws,canvasref]);
 
     useEffect(()=>{
         if(Drawref.current){
             Drawref.current.setTools(Selected);
         }
-     
-
     },[Selected]);
+
+    useEffect(()=>{
+        if(canvasref){
+            canvasref.height= windowsize.height;
+            canvasref.width = windowsize.width;
+        }
+    },[canvasref]);
 
 
 
@@ -59,7 +66,7 @@ export function Canvas ({roomId, ws}:{
 
       <div className="fixed pt-3 hidden sm:flex w-screen p-3 justify-end">
     <Avatar className="h-12 w-12 rounded-full">
-                  <AvatarImage src={ user?.imageurl || image } />
+                  <AvatarImage className="rounded-full" src={ user?.imageurl || image } />
     </Avatar>
     </div>
     <Topbar Selected={Selected} setSelected={setSelected} />
@@ -67,7 +74,7 @@ export function Canvas ({roomId, ws}:{
            
        
 
-    <canvas ref={canvasref} className="bg-gray-50" height={windowsize.height} width={windowsize.width}></canvas>
+    <canvas ref={(event)=>{if(event) setcanvasref(event)}} height={windowsize.height} width={windowsize.width} className="bg-red-50"></canvas>
   
    </div>
 }
