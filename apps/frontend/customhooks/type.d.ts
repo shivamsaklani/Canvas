@@ -1,5 +1,6 @@
 interface userDetails{
-    name:string,
-    email:string,
+    name:string | undefined,
+    email:string |undefined,
+    password:string |undefined,
     imageurl:string | undefined
   }
