@@ -1,18 +1,96 @@
+require('dotenv').config();
 import express from "express"
 import jwt from "jsonwebtoken"
 import cors from "cors"
+import crypto from "crypto";
+import Redis from "ioredis";
 import{ CreateRoomSchema, CreateUserSchema, LoginUserSchema } from "@repo/common/types"
 import {Database } from  "@repo/db/database"
 import { JWT_SECRET } from "@repo/backend-common/config"
 import VerfiyToken from "./verifytoken"
+const nodemailer = require("nodemailer");
 const app =express();
 const encrypt = require("bcryptjs");
+const storeotp= new Redis(process.env.REDIS_URL!);
 app.use(express.json());
 app.use(cors());
+const transportemail = nodemailer.createTransport({
+        service:"gmail",
+        auth:{
+            user: process.env.USER_EMAIL,
+            pass: process.env.PASSWORD
+        },
+    secure:true,
+});
 
                     // first hash the password and then save it in the database //
 
-                        // SIGNUP 
+                        // SIGNUP
+app.post("/otp/generate",async (req,res)=>{
+    let message= "";
+    const email = req.body.email;
+   const existinguser= await Database.user.findFirst({
+        where:{
+            email:email
+        }
+    })
+    if(existinguser){
+        message = "User Exist.Please Login";
+        res.status(401);
+        res.json(message);
+        return;
+    }
+    const otp =crypto.randomInt(100000, 999999).toString();
+    const mailData = {
+        from: process.env.USER_EMAIL,
+        to:email,
+        subject: "OTP valid for 10 minute",
+        text: `Your OTP is ${otp}.It will expire in 10 minutes`
+    };
+    try {
+
+        await storeotp.setex(email,600,otp);
+        await transportemail.sendMail(mailData);
+        message= "Email Sent Successfully";
+        res.status(200);
+
+        
+    } catch (error) {
+        message = "Try Again";
+        res.status(500);
+        return;
+    }
+   res.json({
+    mesg:message
+   });
+
+})
+
+app.post("/otp/verify",async (req,res)=>{
+    const {email,otp}=req.body;
+    if(!otp){
+        res.status(400).json({message:"Please Enter OTP"});
+        return;
+    }
+    if(!email){
+        res.status(400).json({message:"Please Enter Email"});
+        return;
+
+    }
+    try {
+        const savedotp=await storeotp.get(email);
+        if(savedotp != otp){
+            res.status(400).json({message:"Wrong OTP!"});
+            return;
+        }
+        await storeotp.del(email);
+        res.status(200).json({message:"User verified"});
+        return;
+    } catch (error) {
+        res.status(500).json({message:"Try again"});
+        return;
+    }
+})
 
 app.post("/signup",async (req,res)=>{
 
@@ -112,7 +190,6 @@ app.post("/createroom",VerfiyToken,async (req,res)=>{
     }
     else{
         try {
-            console.log(req.userId);
             const roomId = await Database.room.create({
                 data:{
                     adminId :req.userId as string,
