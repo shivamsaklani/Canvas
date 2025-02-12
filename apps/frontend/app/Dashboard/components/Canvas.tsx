@@ -5,11 +5,12 @@ import { GlobalSelectedTool } from "@/app/Globalstates/SelectedTool";
 import useUserDetails from "@/customhooks/UserDetails";
 import useWindowSize from "@/customhooks/windowSize";
 import DrawHandler from "@/DrawLogic/DrawHandler";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar} from "@radix-ui/react-avatar";
 import { ArrowRight, Circle, Eraser, Menu, PenLine, RectangleHorizontalIcon, Type, ZoomIn, ZoomInIcon, ZoomOut } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
-const image ="/photo.jpg";
+import profile from "../../../public/images/photo.jpg";
 export enum tools {
     circle = "circle",
     rect = "rectangle",
@@ -70,7 +71,7 @@ export function Canvas ({roomId, ws}:{
 
       <div className="fixed pt-3 hidden sm:flex w-screen p-3 justify-end">
     <Avatar className="h-12 w-12 rounded-full">
-                  <AvatarImage className="rounded-full" src={ user?.imageurl || image } />
+                  <Image src={profile || user?.imageurl} alt="profile"/>
     </Avatar>
     </div>
     <Topbar Selected={Selected} setSelected={setSelected} />
@@ -78,7 +79,7 @@ export function Canvas ({roomId, ws}:{
            
        
 
-    <canvas ref={(event)=>{if(event) setcanvasref(event)}} height={windowsize.height} width={windowsize.width}></canvas>
+    <canvas ref={(event)=>{if(event) setcanvasref(event)}} height={windowsize.height} width={windowsize.width} tabIndex={0}></canvas>
     
     <div className="absolute bottom-10 left-10 grid grid-cols-3 bg-gray-50 rounded-lg shadow-lg z-5">
   <button className="flex justify-center items-center border-white p-2 rounded-tl-md rounded-bl-md active:border-blue-200 active:border"><ZoomIn/></button>
@@ -100,7 +101,6 @@ function Topbar({Selected,setSelected}:{
         <HomeIcons activated={Selected == tools.text} icon={<Type/>} onclick={()=>{ setSelected(tools.text)}} /> 
         <HomeIcons activated={Selected == tools.rect} icon={<RectangleHorizontalIcon/>} onclick={()=>{setSelected(tools.rect)}}/> 
         <HomeIcons activated={Selected == tools.circle} icon={<Circle/>} onclick={()=>{setSelected(tools.circle)}}/> 
-        <HomeIcons activated={Selected == tools.zoom} icon={<ZoomInIcon/>} onclick={()=>{setSelected(tools.zoom)}}/> 
         <HomeIcons activated={Selected == tools.eraser} icon={<Eraser/>} onclick={()=>{setSelected(tools.eraser)}}/> 
         <HomeIcons activated={Selected == tools.arrow} icon={<ArrowRight/>} onclick={()=>{setSelected(tools.arrow)}}/> 
         <HomeIcons activated={Selected == tools.line} icon={<PenLine/>} onclick={()=>setSelected(tools.line)}/>

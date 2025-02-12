@@ -1,5 +1,5 @@
 "use client"
-import { Card, CardContent, CardHeader } from "@/app/Dashboard/components/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { HTTP_BACKEND } from "@repo/backend-common/config";
@@ -69,9 +69,10 @@ export default function OTPgenerate(){
                 <div className="flex justify-center text-2xl items-center">Verify User</div>
                     <Label>Enter OTP</Label>
                     <Input required type="text" ref={OTP} placeholder="Enter your Otp"/>
-                    <Button onClick={backend}  size="lg" className="text-md rounded-full" > Verify User </Button>
-                    <div className="flex justify-end font-light cursor-pointer" onClick={()=>{generateOTP(userdetails.email)}}>send otp again?</div>
+                     <div className="flex justify-end font-light cursor-pointer" onClick={()=>{generateOTP(userdetails.email)}}>send otp again?</div>
                 </CardContent>
+                <Button onClick={backend}  size="lg" className="text-md rounded-full" > Verify User </Button>
+                 
 
     </div>
             

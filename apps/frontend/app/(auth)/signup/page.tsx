@@ -1,6 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader} from "@/app/Dashboard/components/card";
+import { Card, CardContent, CardHeader} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useRef, useState } from "react";
@@ -37,6 +37,7 @@ export default function SignUp(){
 
         
        }
+       
     }
    
     return <>
@@ -51,12 +52,13 @@ export default function SignUp(){
            <Input required ref={password} type="password" placeholder="Password"></Input>
          <Label>Username</Label>
            <Input required ref={username} onKeyDown={(e)=>{ if (e.key === "Enter"){backend()}}} type="text" placeholder="Enter your name"></Input>
-        <Button onClick={backend} size="lg" className="text-md rounded-full" >SignUp</Button>
+        
         <div className="flex font-light text-gray items-start justify-end w-full">
         <Link href="./signin">login</Link>
         </div>
         </CardContent>
-   
+      
+        <Button onClick={backend} size="lg" className="text-md rounded-full" >SignUp</Button>
       
         </>
 }

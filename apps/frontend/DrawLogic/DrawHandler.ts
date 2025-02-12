@@ -5,6 +5,7 @@ import RectangleClass from "./RectangleClass";
 import CircleClass from "./CircleClass";
 import LineClass from "./LineClass";
 import ShapeClass from "./ShapeClass";
+import TextClass from "./TextClass";
 
 export default class DrawHandler {
     private canvas: HTMLCanvasElement;
@@ -16,6 +17,8 @@ export default class DrawHandler {
     private clicked: boolean = false;
     private startX: number = 0;
     private startY: number = 0;
+    private istyping: boolean = false;
+    private currentText: TextClass | null = null;
 
     constructor(canvas: HTMLCanvasElement, roomId: string, ws: WebSocket) {
         this.canvas = canvas;
@@ -29,7 +32,7 @@ export default class DrawHandler {
         this.initHandlers();
     }
 
-    setTools(tools:tools){
+    setTools(tools: tools) {
         this.selectedTool = tools;
     }
 
@@ -47,6 +50,9 @@ export default class DrawHandler {
                     case "line":
                         this.shapeManager.addShape(new LineClass(this.canvas, shape.startX, shape.startY, shape.endX, shape.endY));
                         break;
+                    case "text":
+                            this.shapeManager.addShape(new TextClass(this.canvas,shape.data,shape.startX,shape.startY));
+                        break;
                 }
             });
         } catch (error) {
@@ -59,7 +65,7 @@ export default class DrawHandler {
 
             try {
                 const parsedData = JSON.parse(e.data);
-              
+
                 if (parsedData.type === "createshape") {
                     const data = JSON.parse(parsedData.shape); // Correctly parse the shape object
                     let shape;
@@ -73,13 +79,16 @@ export default class DrawHandler {
                         case "line":
                             shape = new LineClass(this.canvas, data.shape.startX, data.shape.startY, data.shape.endX, data.shape.endY);
                             break;
+                        case "text":
+                            shape = new TextClass(this.canvas, data.shape.data, data.shape.startX, data.shape.startY);
+                            break;
                         default:
                             console.warn("Unknown shape type:", data.shape.type);
                     }
-    
+
                     if (shape) {
                         this.shapeManager.addShape(shape);
-                        this.ctx?.clearRect(0,0,this.canvas.width,this.canvas.height);
+                        this.ctx?.clearRect(0, 0, this.canvas.width, this.canvas.height);
                         this.shapeManager.render();
                     }
                 }
@@ -88,33 +97,85 @@ export default class DrawHandler {
             }
         };
     }
-    
 
-    destroyHandler(){
-        this.canvas.removeEventListener("mousedown",this.mouseDown);
+
+    destroyHandler() {
+        this.canvas.removeEventListener("mousedown", this.mouseDown);
         this.canvas.removeEventListener("mouseup", this.mouseUp);
-        this.canvas.removeEventListener("mousemove",this.mouseMove);
+        this.canvas.removeEventListener("mousemove", this.mouseMove);
+        this.canvas.removeEventListener("keydown", this.Typing);
     }
 
     initHandlers() {
         this.canvas.addEventListener("mousedown", this.mouseDown);
         this.canvas.addEventListener("mouseup", this.mouseUp);
-        this.canvas.addEventListener("mousemove",this.mouseMove);
+        this.canvas.addEventListener("mousemove", this.mouseMove);
+        this.canvas.addEventListener("keydown", this.Typing);
     }
 
     mouseDown = (e: MouseEvent) => {
         this.clicked = true;
         this.startX = e.clientX;
         this.startY = e.clientY;
+        switch (this.selectedTool) {
+            case tools.text:
+                this.finishedTyping();
+                this.istyping = true;
+                this.currentText = new TextClass(this.canvas, "", this.startX, this.startY);
+                break;
+        }
+    }
+
+    Typing = (event: KeyboardEvent) => {
+        switch (this.selectedTool) {
+            case tools.text:
+                if (!this.istyping || !this.currentText) return;
+
+                if (event.key === "Backspace") {
+                    this.currentText.text = this.currentText.text.slice(0, -1);
+                }
+                else if (event.key === "Enter") {
+                    this.currentText.text += "\n";
+                }
+                else if (event.key.length === 1) {
+                    this.currentText.text += event.key;
+                }
+
+                
+                this.currentText.draw();
+                break;
+            default :
+                break;
+        }
+    }
+
+    finishedTyping = () => {
+
+        if (this.istyping && this.currentText?.text) {
+            this.ws.send(JSON.stringify({
+                type: "createshape",
+                shape: JSON.stringify(this.currentText.ToJson()),
+                roomId: this.roomId
+            }));
+            this.shapeManager.addShape(this.currentText);
+            console.log("Text finalized:", this.currentText.text);
+            this.istyping = false;
+        this.currentText = null;
+        this.renderShapes();
+    
+   
+        }
+        
+
     }
 
     mouseUp = (e: MouseEvent) => {
-          if (this.clicked) {
+        if (this.clicked) {
             this.clicked = false;
-            let shape: ShapeClass| null = null;
+            let shape: ShapeClass | null = null;
             let endX = e.clientX;
             let endY = e.clientY;
-    
+
             switch (this.selectedTool) {
                 case tools.rect:
                     shape = new RectangleClass(this.canvas, this.startX, this.startY, endX - this.startX, endY - this.startY);
@@ -126,13 +187,15 @@ export default class DrawHandler {
                 case tools.line:
                     shape = new LineClass(this.canvas, this.startX, this.startY, endX, endY);
                     break;
-            
+                case tools.text:
+                    break;
+
             }
             if (shape) {
                 this.ctx?.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.shapeManager.addShape(shape);
 
-              
+
                 // Send shape to WebSocket
                 this.ws.send(JSON.stringify({
                     type: "createshape",
@@ -142,22 +205,22 @@ export default class DrawHandler {
             }
         }
 
-       
+
     }
     mouseMove = (e: MouseEvent) => {
         if (!this.clicked || !this.ctx) return;
-    
+
         const endX = e.clientX - this.canvas.offsetLeft;
         const endY = e.clientY - this.canvas.offsetTop;
-    
+
         // Clear canvas before drawing new shape
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
+
         // Redraw existing shapes before drawing new preview
         this.shapeManager.render();
-    
+
         this.ctx.beginPath(); // Start new drawing path
-    
+
         switch (this.selectedTool) {
             case tools.rect:
                 this.ctx.strokeRect(this.startX, this.startY, endX - this.startX, endY - this.startY);
@@ -170,8 +233,10 @@ export default class DrawHandler {
                 this.ctx.moveTo(this.startX, this.startY);
                 this.ctx.lineTo(endX, endY);
                 break;
+            case tools.text:
+                break;
         }
         this.ctx.stroke();
     };
-    
+
 }

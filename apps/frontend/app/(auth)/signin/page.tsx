@@ -1,6 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/app/Dashboard/components/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
@@ -45,15 +45,10 @@ export default function SignIn(){
         <Input required ref={email} type="text" placeholder="Email" ></Input>
         <Label>Password</Label>
            <Input required ref={password}  onKeyDown={(e)=>{ if (e.key === "Enter"){backend()}}} type="password" placeholder="Password"></Input>
-        <Button onClick={backend} size="lg" className="text-md rounded-full" >SignIn</Button>
-        <div className="flex font-light font-gray justify-end w-full"><Link href="./signup">New user</Link></div> 
+          <div className="flex font-light font-gray justify-end w-full"><Link href="./signup">New user</Link></div> 
        
         </CardContent>
-        
-      
-       
-        
-     
+        <Button onClick={backend} size="lg" className="text-md shadow rounded-full" >SignIn</Button>
         </>
     
        

@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarImage } from "@/app/Dashboard/components/avatar";
+import { Avatar} from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useUserDetails from "@/customhooks/UserDetails";
 import { Palette, Settings, User, LogOut } from "lucide-react";
-const image ="/photo.jpg";
+import Image from "next/image";
+import profile from "../../../public/images/photo.jpg";
 export function Navbar() {
   const user = useUserDetails();
   return (
@@ -29,7 +30,7 @@ export function Navbar() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8 bg-black">
-                  <AvatarImage src={user?.imageurl || image} />
+                  <Image src={profile || user?.imageurl} alt="profile pic"/>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>

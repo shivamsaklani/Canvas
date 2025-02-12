@@ -26,7 +26,7 @@ export function UserAuth({roomslug} :{roomslug:string}){
         }
     },[roomId])
       
-     
+     console.log(socket);
     if(!roomId){
         return <div>Room is not valid</div>;
     }

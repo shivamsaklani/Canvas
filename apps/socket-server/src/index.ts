@@ -2,7 +2,7 @@ import {WebSocket, WebSocketServer} from "ws"
 import jwt, { Jwt, JwtPayload } from "jsonwebtoken";
 import {JWT_SECRET} from "@repo/backend-common/config"
 import {Database} from "@repo/db/database";
-const wss =new WebSocketServer({port:8081});
+const wss =new WebSocketServer({port:8081,host:"0.0.0.0"});
 interface User{
   ws:WebSocket,
   rooms:string[],

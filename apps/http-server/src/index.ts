@@ -292,7 +292,23 @@ app.post("/userdetails",VerfiyToken,async(req,res)=>{
         name  :userdetails?.name,
         photo :userdetails?.photo
     })
-})
+});
+
+app.get("/rooms/roomdetails",async (req,res)=>{
+    
+    try {
+        const response = await Database.room.findMany();
+        res.status(200).json({
+            rooms:response
+        });
+        return;
+        
+    } catch (error) {
+        res.status(500).json({
+            error:error
+        });
+    }
+});
 
 
 

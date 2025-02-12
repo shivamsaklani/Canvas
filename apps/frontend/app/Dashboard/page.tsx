@@ -2,17 +2,37 @@
 import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navbar } from "@/app/Dashboard/components/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, UserCircle, Users2, Users2Icon } from "lucide-react";
-import Dashcard from "@/app/Dashboard/components/dashcard";
+import { PlusCircle,Users2} from "lucide-react";
 import RoomCard from "./components/RoomCard";
-import { Card } from "@/app/Dashboard/components/card";
+import Dashcard from "./components/dashcard";
+
+
+type roomdetails={
+  id:string,
+  slug:string,
+}
+
 export default function Dashboard() {
     const router =useRouter();
     const roomName = useRef<HTMLInputElement>(null);
     const roomslug = useRef<HTMLInputElement>(null);
+    const [roomdetails,setroomdetails]= useState([]); 
+
+
+    useEffect(()=>{
+      const room=async ()=>{
+      const response = await axios.get(`${HTTP_BACKEND}/rooms/roomdetails`);
+      setroomdetails(response.data.rooms);
+
+      }
+      room();
+
+      console.log(roomdetails);
+     
+    },[]);
     
     async function joinroom(){
        const room = roomslug.current?.value;
@@ -53,7 +73,6 @@ export default function Dashboard() {
           <TabsList>
             <TabsTrigger value="create">Create Room</TabsTrigger>
             <TabsTrigger value="join">Join Room</TabsTrigger>
-            <TabsTrigger value="rooms">Rooms</TabsTrigger>
           </TabsList>
 
           <TabsContent value="create">
@@ -63,31 +82,16 @@ export default function Dashboard() {
           <TabsContent value="join">
             <RoomCard reference={roomslug} btnfun={joinroom} title="Join room" placeholder="Enter room Name" button="Join room" Icon ={Users2} />
           </TabsContent>
-          <TabsContent value="rooms">
-            <div className="grid sm:grid-cols-6 gap-x-2 gap-y-3">
-            <Card className="">1</Card>
-            <Card className="">2</Card>
-            <Card className="">3</Card>
-            <Card className="">4</Card>
-            <Card className="">5</Card>
-            <Card className="">6</Card>
-            <Card className="">7</Card>
-            <Card className="">8</Card>
-            <Card className="">9</Card>
-            <Card className="">10</Card>
-            <Card className="">11</Card>
-            <Card className="">12</Card>
-
-            </div>
-           
-          </TabsContent>
+          
 
         </Tabs>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
-         <Dashcard title="Active users" content="3" icon={UserCircle}/>
-         <Dashcard title="Total users" content="20" icon={UserCircle}/>
-         <Dashcard title="Total rooms" content="3" icon={UserCircle}/>
+        {roomdetails.map((x:roomdetails)=>
+          <Dashcard roomslug={x.slug} id={x.id} />
+
+        )}
+        
         </div>
       </div>
     </main>
