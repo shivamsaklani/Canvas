@@ -5,7 +5,7 @@ export default function AuthLayout({children}:{
     children:ReactNode
 }){
 return <>
-    <div className=" grid grid-cols-1 sm:grid-cols-2 h-screen w-screen">
+    <div className=" grid grid-cols-1 sm:grid-cols-2  h-screen w-screen">
    
      <div className="relative flex justify-center items-center">
         

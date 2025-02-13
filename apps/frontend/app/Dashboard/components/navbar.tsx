@@ -14,8 +14,21 @@ import {
 import useUserDetails from "@/customhooks/UserDetails";
 import { Palette, Settings, User, LogOut } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import profile from "../../../public/images/photo.jpg";
-export function Navbar() {
+export function Navbar({
+  setprofilebox
+}:{
+  setprofilebox:()=>void
+}) {
+  const router =useRouter();
+
+  function logout() {
+    localStorage.removeItem("token");
+    router.push("/signin");
+
+  }
+
   const user = useUserDetails();
   return (
     <div className="border-b">
@@ -47,7 +60,7 @@ export function Navbar() {
               <DropdownMenuGroup>
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+                 <button onClick={setprofilebox}>Profile</button>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
@@ -57,7 +70,8 @@ export function Navbar() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+              
+                <button onClick={logout}  >Logout</button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle,Users2} from "lucide-react";
 import RoomCard from "./components/RoomCard";
 import Dashcard from "./components/dashcard";
+import ProfileBox from "./components/ProfileBox";
 
 
 type roomdetails={
@@ -19,19 +20,16 @@ export default function Dashboard() {
     const router =useRouter();
     const roomName = useRef<HTMLInputElement>(null);
     const roomslug = useRef<HTMLInputElement>(null);
-    const [roomdetails,setroomdetails]= useState([]); 
+    const [roomdetails,setroomdetails]= useState([]);
+    const [profilebox,setprofilebox]= useState(false);
 
 
     useEffect(()=>{
       const room=async ()=>{
       const response = await axios.get(`${HTTP_BACKEND}/rooms/roomdetails`);
       setroomdetails(response.data.rooms);
-
-      }
+     }
       room();
-
-      console.log(roomdetails);
-     
     },[]);
     
     async function joinroom(){
@@ -60,8 +58,10 @@ export default function Dashboard() {
        
      }
 
-  return (<>
-    <Navbar/>
+  return (
+  <>
+  {profilebox && <ProfileBox setprofilebox={()=>setprofilebox((p)=>!p)}/>}
+    <Navbar setprofilebox={()=>setprofilebox((prev)=>!prev)}/>
     <main className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6">
         <div className="mb-8">
@@ -95,6 +95,5 @@ export default function Dashboard() {
         </div>
       </div>
     </main>
-    </>
-  );
+    </>);
 }

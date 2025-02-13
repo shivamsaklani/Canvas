@@ -26,7 +26,6 @@ export default class DrawHandler {
         this.roomId = roomId;
         this.ws = ws;
         this.shapeManager = new ShapeManager(canvas);
-        console.log(this.shapeManager);
         this.loadStoredShapes();
         this.renderShapes();
         this.initHandlers();
@@ -51,7 +50,7 @@ export default class DrawHandler {
                         this.shapeManager.addShape(new LineClass(this.canvas, shape.startX, shape.startY, shape.endX, shape.endY));
                         break;
                     case "text":
-                            this.shapeManager.addShape(new TextClass(this.canvas,shape.data,shape.startX,shape.startY));
+                        this.shapeManager.addShape(new TextClass(this.canvas,shape.data,shape.startX,shape.startY));
                         break;
                 }
             });
@@ -123,6 +122,9 @@ export default class DrawHandler {
                 this.istyping = true;
                 this.currentText = new TextClass(this.canvas, "", this.startX, this.startY);
                 break;
+            case tools.selectobject:
+
+                break;
         }
     }
 
@@ -158,7 +160,6 @@ export default class DrawHandler {
                 roomId: this.roomId
             }));
             this.shapeManager.addShape(this.currentText);
-            console.log("Text finalized:", this.currentText.text);
             this.istyping = false;
         this.currentText = null;
         this.renderShapes();
@@ -234,6 +235,8 @@ export default class DrawHandler {
                 this.ctx.lineTo(endX, endY);
                 break;
             case tools.text:
+                break;
+            case tools.selectobject:
                 break;
         }
         this.ctx.stroke();

@@ -2,8 +2,13 @@ import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+type user={
+  name:string,
+  email:string,
+  imageurl:string,
+}
 export default function useUserDetails(){
-    const [user,setuser] = useState<userDetails>();
+    const [user,setuser] = useState<user |undefined >();
   useEffect(()=>{
     async function userDetails() {
       try {
@@ -18,19 +23,22 @@ export default function useUserDetails(){
           email:response.data.email,
           imageurl:response.data.photo
         }
+
+     
+        if(!users) return;
+       
         setuser(users);
       } catch (e) {
         console.log(e);
-         setuser({
-          name:"",
-          email : "",
-          imageurl: undefined
-         })
+        setuser(undefined);
       }
 
     
     }
     userDetails();
+    return ()=>{
+      return;
+    }
   },[]);
 
   return user;
