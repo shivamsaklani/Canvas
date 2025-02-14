@@ -3,7 +3,10 @@ import express from "express"
 import jwt from "jsonwebtoken"
 import cors from "cors"
 import crypto from "crypto";
+import multer from "multer";
 import Redis from "ioredis";
+import path from "path";
+import fs from  "fs";
 import{ CreateRoomSchema, CreateUserSchema, LoginUserSchema } from "@repo/common/types"
 import {Database } from  "@repo/db/database"
 import { JWT_SECRET } from "@repo/backend-common/config"
@@ -13,7 +16,22 @@ const app =express();
 const encrypt = require("bcryptjs");
 const storeotp= new Redis(process.env.REDIS_URL!);
 app.use(express.json());
-app.use(cors());
+app.use(cors()); 
+const destfolder= path.join(__dirname+"../../../frontend/public/"+"profile/");
+if(!fs.existsSync(destfolder)){
+    fs.mkdirSync(destfolder,{recursive:true});
+}
+const storage = multer.diskStorage({
+    destination:function (req,file,callback){
+        callback(null,destfolder);
+
+    },
+    filename:function (req,file,callback){
+        callback(null,file.originalname);
+    }
+});
+const upload = multer({storage:storage});
+
 const transportemail = nodemailer.createTransport({
         service:"gmail",
         auth:{
@@ -23,6 +41,37 @@ const transportemail = nodemailer.createTransport({
     secure:true,
 });
 
+
+app.post("/upload/image", VerfiyToken, upload.single('profileImage'), async (req, res) => {
+    const user = req.userId;
+    const file = req.file?.filename;
+    if (!req.file) return;
+    let update;
+    if (!user) return;
+    try {
+        update = await Database.user.update(
+            {
+                where: {
+                    id: user
+                },
+                data: {
+                    photo: destfolder+file
+
+                }
+            }
+        )
+        res.json({
+            mesg: "file uploaded successfully"
+        });
+        return;
+    } catch (error) {
+        res.status(500).json({
+            mesg: " Please try again"
+        })
+        return;
+    }
+
+});
                     // first hash the password and then save it in the database //
 
                         // SIGNUP
