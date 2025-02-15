@@ -11,18 +11,7 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 import profile from "../../../public/images/photo.jpg";
-export enum tools {
-    circle = "circle",
-    rect = "rectangle",
-    line = "line",
-    zoom = "zoom",
-    eraser = "eraser",
-    arrow = "arrow",
-    text = "text",
-    selectobject ="select",
-    panning = "panning"
-    
-}
+import { tools } from "@repo/canvas/shapes";
 
 export function Canvas ({roomId, ws}:{
     roomId:string,

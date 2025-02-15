@@ -1,4 +1,4 @@
-import { tools } from "@/app/Dashboard/components/Canvas";
+
 import { StoredShapes } from "./Draw";
 import ShapeManager from "./ShapeManager";
 import RectangleClass from "./RectangleClass";
@@ -6,6 +6,7 @@ import CircleClass from "./CircleClass";
 import LineClass from "./LineClass";
 import ShapeClass from "./ShapeClass";
 import TextClass from "./TextClass";
+import { tools } from "@repo/canvas/shapes";
 
 export default class DrawHandler {
     private canvas: HTMLCanvasElement;
@@ -18,6 +19,7 @@ export default class DrawHandler {
     private startX: number = 0;
     private startY: number = 0;
     private istyping: boolean = false;
+    private shapeselect:boolean =false;
     private currentText: TextClass | null = null;
 
     constructor(canvas: HTMLCanvasElement, roomId: string, ws: WebSocket) {
@@ -123,7 +125,7 @@ export default class DrawHandler {
                 this.currentText = new TextClass(this.canvas, "", this.startX, this.startY);
                 break;
             case tools.selectobject:
-
+                this.shapeselect =true;
                 break;
         }
     }
@@ -190,6 +192,9 @@ export default class DrawHandler {
                     break;
                 case tools.text:
                     break;
+                case tools.selectobject:
+                    this.shapeselect= false;
+                    break;
 
             }
             if (shape) {
@@ -237,6 +242,8 @@ export default class DrawHandler {
             case tools.text:
                 break;
             case tools.selectobject:
+                this.ctx.strokeStyle= "blue";
+                this.ctx.strokeRect(this.startX,this.startY,endX,endY);
                 break;
         }
         this.ctx.stroke();

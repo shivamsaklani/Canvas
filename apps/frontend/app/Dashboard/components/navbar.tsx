@@ -1,6 +1,4 @@
 "use client";
-
-import { Avatar} from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,6 +14,8 @@ import { Palette, Settings, User, LogOut } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import profile from "../../../public/images/photo.jpg";
+import image from "../../../public/images/bg.png"
+import { Avatar } from "@radix-ui/react-avatar";
 export function Navbar({
   setprofilebox
 }:{
@@ -43,7 +43,7 @@ export function Navbar({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8 bg-black">
-                  <Image src={profile || user?.imageurl} alt="profile pic"/>
+                  <Image src={image} width={36} height={36} alt="profile pic" />
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>

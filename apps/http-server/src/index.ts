@@ -55,13 +55,13 @@ app.post("/upload/image", VerfiyToken, upload.single('profileImage'), async (req
                     id: user
                 },
                 data: {
-                    photo: destfolder+file
+                    photo: "/frontend/public/"+"profile/"+file
 
                 }
             }
         )
         res.json({
-            mesg: "file uploaded successfully"
+            mesg: update.photo
         });
         return;
     } catch (error) {

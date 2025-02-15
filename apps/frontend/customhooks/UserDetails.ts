@@ -1,14 +1,9 @@
 import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-type user={
-  name:string,
-  email:string,
-  imageurl:string,
-}
+import { Details} from "@repo/canvas/shapes";
 export default function useUserDetails(){
-    const [user,setuser] = useState<user |undefined >();
+    const [user,setuser] = useState<Details|undefined >();
   useEffect(()=>{
     async function userDetails() {
       try {
