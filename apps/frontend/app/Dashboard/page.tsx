@@ -52,8 +52,8 @@ export default function Dashboard() {
           toast.success("room Created :"+room.data.roomId.slug);
           
 
-      } catch (error) {
-          toast.error("Try again");
+      } catch (e) {
+          toast.error("Try again"+e);
       }
        
      }
@@ -89,7 +89,7 @@ export default function Dashboard() {
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
         {roomdetails.map((x:roomdetails)=>
-          <Dashcard roomslug={x.slug} id={x.id} />
+          <Dashcard key={x.id} roomslug={x.slug} id={x.id} />
 
         )}
         

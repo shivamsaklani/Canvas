@@ -1,10 +1,11 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader} from "@/components/ui/card";
+import { AxiosError } from "axios";
+import { CardContent} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
-import { useRef, useState } from "react";
-import { HTTP_BACKEND } from "@repo/backend-common/config";
+
+import { useRef } from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {generateOTP } from "../backend";
@@ -36,17 +37,15 @@ export default function SignUp(){
       } else{
          toast.error("Try Again");
       }
-       } catch (e:any) {
-         if(e.response.status=== 409){
+       } catch (error) {
+         const e = error as AxiosError;
+         if(e.response?.status=== 409){
             toast.error("User Already Exist please Signin");
            }
            else{
             toast.error("Wrong email or password");
 
            }
-
-     
-
         
        }
        

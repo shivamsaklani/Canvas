@@ -11,7 +11,7 @@ export const generateOTP =async (email:string)=>{
            toast.success("Otp sent");
            return response;
            
-       } catch (err:any) {
+       } catch (err) {
          throw err;
        } 
      

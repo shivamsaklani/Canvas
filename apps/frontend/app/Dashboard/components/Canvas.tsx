@@ -6,7 +6,7 @@ import useUserDetails from "@/customhooks/UserDetails";
 import useWindowSize from "@/customhooks/windowSize";
 import DrawHandler from "@/DrawLogic/DrawHandler";
 import { Avatar} from "@radix-ui/react-avatar";
-import { ArrowRight, Circle, Eraser, Hand, Menu, MousePointer2, PenLine, RectangleHorizontalIcon, Type, ZoomIn, ZoomInIcon, ZoomOut } from "lucide-react";
+import { ArrowRight, Circle, Eraser, Hand, Menu, MousePointer2, PenLine, RectangleHorizontalIcon, Type, ZoomIn, ZoomOut } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
@@ -49,7 +49,7 @@ export function Canvas ({roomId, ws}:{
             canvasref.height= windowsize.height;
             canvasref.width = windowsize.width;
         }
-    },[canvasref]);
+    },[canvasref,windowsize]);
 
     function zoomin(){
         const ctx= canvasref?.getContext("2d");

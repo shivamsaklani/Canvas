@@ -9,11 +9,12 @@ import React, { useRef, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import image from "../../../public/images/photo.jpg"
+import { Avatar } from "@/components/ui/avatar";
 export default function ProfileBox({setprofilebox}:{
     setprofilebox:()=>void
 }){
     const formref = useRef<HTMLFormElement>(null);
-    const [file , setfile] =useState<string | null>(null);
+    const [file , setfile] =useState<string |null>(null);
     const user = useUserDetails();
     if(!user){
         return;
@@ -44,7 +45,7 @@ export default function ProfileBox({setprofilebox}:{
         toast.success("Filed Uploaded");
         setfile(response.data.imageurl);
       } catch (e) {
-        toast.error("Try again");
+        toast.error("Try again"+e);
       }
      }
       
@@ -73,7 +74,9 @@ export default function ProfileBox({setprofilebox}:{
                 <div className="grid grid-cols gap-y-3 gap-x-3 items-center justify-center items-center justify-center">
                   
                <div className="grid grid-rows-3 justify-between">
-               <Image src={file || image} className="rounded-full " width={36} height={36} alt="profile image"/>
+               <Avatar className="h-24 w-24 bg-black">
+                  <Image src={image || file} fill alt="profile pic" />
+                </Avatar>
                 <div className="items-center grid grid-cols-2">
 
                 <div>

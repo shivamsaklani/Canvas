@@ -1,5 +1,5 @@
 "use client"
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CardContent} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { HTTP_BACKEND } from "@repo/backend-common/config";
@@ -55,7 +55,7 @@ export default function OTPgenerate(){
       
          } catch (e) {
   
-          toast.error("try again");
+          toast.error("Try again"+e);
           return;
   
           

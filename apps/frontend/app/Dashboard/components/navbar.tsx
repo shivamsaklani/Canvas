@@ -13,9 +13,9 @@ import useUserDetails from "@/customhooks/UserDetails";
 import { Palette, Settings, User, LogOut } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import profile from "../../../public/images/photo.jpg";
 import image from "../../../public/images/bg.png"
 import { Avatar } from "@radix-ui/react-avatar";
+import toast from "react-hot-toast";
 export function Navbar({
   setprofilebox
 }:{
@@ -26,6 +26,7 @@ export function Navbar({
   function logout() {
     localStorage.removeItem("token");
     router.push("/signin");
+    toast.success("Logout");
 
   }
 
