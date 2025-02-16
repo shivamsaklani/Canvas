@@ -27,7 +27,13 @@ export interface userDetails{
 export type Details={
     name:string ,
     email:string,
-    imageurl:string
+    imageurl:string,
+}
+export type otpDetails ={
+    name:string ,
+    email:string,
+    password:string
+
 }
 export enum tools {
     circle = "circle",

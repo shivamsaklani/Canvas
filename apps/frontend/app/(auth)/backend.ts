@@ -1,5 +1,6 @@
 import { HTTP_BACKEND } from "@repo/backend-common/config";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const generateOTP =async (email:string)=>{
    let response;
@@ -7,14 +8,11 @@ export const generateOTP =async (email:string)=>{
         response= await axios.post( `${HTTP_BACKEND}/otp/generate`,{
              "email":email
            });  
-           if(response?.status === 401){
-            alert("User Already exist");
-           }
-       } catch (err) {
-        
-        alert ("Try again");
+           toast.success("Otp sent");
+           return response;
            
-        
-        
+       } catch (err:any) {
+         throw err;
        } 
+     
 }

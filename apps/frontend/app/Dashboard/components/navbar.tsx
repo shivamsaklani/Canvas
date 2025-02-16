@@ -43,7 +43,7 @@ export function Navbar({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8 bg-black">
-                  <Image src={image} width={36} height={36} alt="profile pic" />
+                  <Image src={image || user?.imageurl} fill alt="profile pic" />
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>

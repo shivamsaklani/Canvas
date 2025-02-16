@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {generateOTP } from "../backend";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import toast from "react-hot-toast";
 export default function SignUp(){
     const router = useRouter();
     const email = useRef<HTMLInputElement>(null);
@@ -18,7 +19,7 @@ export default function SignUp(){
        async function backend(){ 
        try {
          if(!email.current?.value){
-            console.log("email not typed");
+            toast.error("Please enter your Email");
             return ;
          }
 
@@ -29,11 +30,22 @@ export default function SignUp(){
          }));
 
 
-      generateOTP (email.current.value);  // generating OTP
-      router.push("/otp");
-       } catch (e) {
+      const genearate =await generateOTP (email.current.value);
+      if(genearate.status === 200){
+         router.push("/otp");
+      } else{
+         toast.error("Try Again");
+      }
+       } catch (e:any) {
+         if(e.response.status=== 409){
+            toast.error("User Already Exist please Signin");
+           }
+           else{
+            toast.error("Wrong email or password");
 
-        console.log("error" +e);
+           }
+
+     
 
         
        }
@@ -44,7 +56,7 @@ export default function SignUp(){
    
    
   
-   <CardContent className=" flex flex-col justify-center gap-5">
+   <CardContent className=" flex flex-col justify-center gap-y-5">
    <div className="grid justify-center text-2xl items-center">SignUp</div>
         <Label>Email</Label>
         <Input required ref={email} type="text" placeholder="Email" ></Input>
@@ -56,9 +68,10 @@ export default function SignUp(){
         <div className="flex font-light text-gray items-start justify-end w-full">
         <Link href="./signin">login</Link>
         </div>
+        <div className="flex justify-center">
+        <Button onClick={backend} size="lg" className="text-md w-full rounded-lg" >SignUp</Button>
+        </div>
         </CardContent>
-      
-        <Button onClick={backend} size="lg" className="text-md rounded-full" >SignUp</Button>
       
         </>
 }

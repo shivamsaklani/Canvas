@@ -9,6 +9,7 @@ import { PlusCircle,Users2} from "lucide-react";
 import RoomCard from "./components/RoomCard";
 import Dashcard from "./components/dashcard";
 import ProfileBox from "./components/ProfileBox";
+import toast, { Toaster } from "react-hot-toast";
 
 
 type roomdetails={
@@ -34,12 +35,12 @@ export default function Dashboard() {
     
     async function joinroom(){
        const room = roomslug.current?.value;
-        router.push("/Dashboard/rooms/"+room);  
+        router.push("/Dashboard/rooms/"+room); 
      }
 
     async function createroom(){
-        console.log(roomName.current?.value);
         let room ;
+        if(!roomName.current?.value) toast.error("Enter Room Name");
       try {
          room = await axios.post(`${HTTP_BACKEND}/createroom`,{
               "roomname":roomName.current?.value as string,},
@@ -48,18 +49,18 @@ export default function Dashboard() {
                 "authorization":localStorage.getItem("token")
               }
           });
-
-          alert("RoomName"+room.data.roomId.slug);
+          toast.success("room Created :"+room.data.roomId.slug);
+          
 
       } catch (error) {
-        console.log(error);
-        
+          toast.error("Try again");
       }
        
      }
 
   return (
   <>
+  <div><Toaster/></div>
   {profilebox && <ProfileBox setprofilebox={()=>setprofilebox((p)=>!p)}/>}
     <Navbar setprofilebox={()=>setprofilebox((prev)=>!prev)}/>
     <main className="min-h-screen bg-background">

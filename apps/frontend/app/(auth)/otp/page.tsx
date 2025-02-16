@@ -8,10 +8,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { generateOTP } from "../backend";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import { otpDetails } from "@repo/canvas/shapes";
+import toast from "react-hot-toast";
 
 export default function OTPgenerate(){
     const router = useRouter();
-    const [userdetails, setUserDetails] = useState<Details>({
+    const [userdetails, setUserDetails] = useState<otpDetails>({
       name:"",
       email:"",
       password:""
@@ -21,7 +23,6 @@ export default function OTPgenerate(){
         const storedDetails = sessionStorage.getItem("userdetails");
         if (storedDetails) {
             setUserDetails(JSON.parse(storedDetails));
-            console.log(userdetails);
         } else {
             router.push("/signup");
         }
@@ -47,13 +48,14 @@ export default function OTPgenerate(){
             "name":userdetails.name
   
           });
+          toast.success("User verified");
           router.push("/signin");
 
         }
       
          } catch (e) {
   
-          console.log("error" +e);
+          toast.error("try again");
           return;
   
           
@@ -65,14 +67,17 @@ export default function OTPgenerate(){
       <div className="grid gap-y-5">
    
     
-                <CardContent className="flex flex-col justify-center gap-5">
+                <CardContent className="flex flex-col justify-center gap-y-5">
                 <div className="flex justify-center text-2xl items-center">Verify User</div>
                     <Label>Enter OTP</Label>
                     <Input required type="text" ref={OTP} placeholder="Enter your Otp"/>
                      <div className="flex justify-end font-light cursor-pointer" onClick={()=>{generateOTP(userdetails.email)}}>send otp again?</div>
-                </CardContent>
-                <Button onClick={backend}  size="lg" className="text-md rounded-full" > Verify User </Button>
+                     <div className="flex justify-center ">
+                <Button onClick={backend}  size="lg" className="text-md w-full rounded-lg" > Verify User </Button>
+                </div>
                  
+                </CardContent>
+               
 
     </div>
             

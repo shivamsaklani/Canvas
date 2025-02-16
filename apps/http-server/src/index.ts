@@ -85,7 +85,7 @@ app.post("/otp/generate",async (req,res)=>{
     })
     if(existinguser){
         message = "User Exist.Please Login";
-        res.status(401);
+        res.status(409);
         res.json(message);
         return;
     }

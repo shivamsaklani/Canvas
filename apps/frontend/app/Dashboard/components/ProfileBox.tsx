@@ -7,16 +7,18 @@ import Image from "next/image";
 import useUserDetails from "@/customhooks/UserDetails";
 import React, { useRef, useState } from "react";
 import axios from "axios";
-const image="/public/profile/IMG_0241.jpg";
+import toast from "react-hot-toast";
+import image from "../../../public/images/photo.jpg"
 export default function ProfileBox({setprofilebox}:{
     setprofilebox:()=>void
 }){
     const formref = useRef<HTMLFormElement>(null);
-    const [file , setfile] =useState<string>(image);
+    const [file , setfile] =useState<string | null>(null);
     const user = useUserDetails();
     if(!user){
         return;
     }
+    
 
     const uploadprofile =async (event:React.FormEvent)=>{
       event.preventDefault();
@@ -25,13 +27,12 @@ export default function ProfileBox({setprofilebox}:{
       const file = formref.current.elements.namedItem("profileImage") as HTMLInputElement;
       const token = localStorage.getItem("token");
       if(!file.files || file.files.length === 0 || !token) {
-        alert("select file");
+      toast.error("Please Select File");
         return;
       }
         
      else{
       const uploadfile = file.files[0];
-      console.log(uploadfile);
       formdata.append("profileImage",uploadfile);
       try {
         const response = await axios.post(`${HTTP_BACKEND}/upload/image`,formdata,{
@@ -40,10 +41,10 @@ export default function ProfileBox({setprofilebox}:{
             "Content-Type": "multipart/form-data"
           }
         });
-        alert("file uploaded succesfully");
+        toast.success("Filed Uploaded");
         setfile(response.data.imageurl);
       } catch (e) {
-        console.log(e);
+        toast.error("Try again");
       }
      }
       
@@ -72,7 +73,7 @@ export default function ProfileBox({setprofilebox}:{
                 <div className="grid grid-cols gap-y-3 gap-x-3 items-center justify-center items-center justify-center">
                   
                <div className="grid grid-rows-3 justify-between">
-               <Image src={file || image} className="rounded-full" width={36} height={36} alt="profile image"/>
+               <Image src={file || image} className="rounded-full " width={36} height={36} alt="profile image"/>
                 <div className="items-center grid grid-cols-2">
 
                 <div>

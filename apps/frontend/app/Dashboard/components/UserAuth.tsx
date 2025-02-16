@@ -7,7 +7,7 @@ import useCheckRoom from "@/customhooks/checkRoom";
 export function UserAuth({roomslug} :{roomslug:string}){
    
     const [socket,setsocket] =useState<WebSocket |null>(null);
-    const roomId = useCheckRoom(roomslug);
+    const roomId= useCheckRoom(roomslug);
     useEffect(()=>{
         const token= localStorage.getItem("token");
         if(!token){
@@ -20,19 +20,21 @@ export function UserAuth({roomslug} :{roomslug:string}){
                 type:"joinroom",
                 roomId:roomId
             }));
-        }    
-        return ()=>{
-            ws.close();
+        ws.onerror=()=>{
+            console.log("error");
         }
-    },[roomId])
+        }    
+    },[roomId]);
       
      console.log(socket);
     if(!roomId){
-        return <div>Room is not valid</div>;
+        return <div className="flex h-screen w-screen justify-center items-center">404</div>;
     }
     if(!socket){
-        return <div>User not defined</div>;
+        return <div className="flex h-screen w-screen justify-center items-center">404</div>;
     }
+    return (<>
+   <Canvas roomId={roomId} ws={socket} />
+    </> );
 
-    return <Canvas roomId={roomId} ws ={socket}/>
 }

@@ -8,6 +8,7 @@ export default class ShapeClass {
     }
 
     draw() {
+        if(!this.ctx) return;
         // This will be overridden by subclasses
     }
 
