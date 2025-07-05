@@ -1,3 +1,29 @@
+# Demo
+1 Landing Page
+![Screenshot from 2025-07-05 17-24-35](https://github.com/user-attachments/assets/6b23450c-e3c8-4e0b-8c09-4eeb6716aaab)
+2 Signup 
+![Screenshot from 2025-07-05 17-25-44](https://github.com/user-attachments/assets/591ae5c9-9f94-4aa4-88aa-3e3fc295a5a5)
+3 OTP verification- Used Reddis for generating OTP
+
+![Screenshot from 2025-07-05 17-38-03](https://github.com/user-attachments/assets/8ae12583-5b4c-4cb4-a80b-169956dcad6b)
+
+4 SignIn
+
+![Screenshot from 2025-07-05 17-38-29](https://github.com/user-attachments/assets/f7b6720e-cd0e-479c-9dd1-4aae8e3b7a5d)
+5 Main Dashboard
+
+![Screenshot from 2025-07-05 17-38-39](https://github.com/user-attachments/assets/7710182c-f722-4231-9e93-db97ecf16e8d)
+
+6 Canvas Area to Draw 2d figures 
+
+![Screenshot from 2025-07-05 17-39-38](https://github.com/user-attachments/assets/d90fbecd-d23d-4167-ad01-e36993dc915d)
+
+7 Join Other Rooms 
+
+![Screenshot from 2025-07-05 17-40-05](https://github.com/user-attachments/assets/fa3ac305-f60a-4dd2-9de7-f27f2d367235)
+
+
+
 # Turborepo starter
 
 This Turborepo starter is maintained by the Turborepo core team.
